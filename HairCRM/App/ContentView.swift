@@ -21,7 +21,6 @@ struct ContentView: View {
                         selectedTab: $selectedTab,
                         switchTab: switchTab
                     )
-                   
                 }
             }
         }
