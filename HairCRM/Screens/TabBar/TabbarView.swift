@@ -20,11 +20,11 @@ enum Tab: String, CaseIterable {
     var icon: String {
         switch self {
         case .home:
-            return "plus.viewfinder"
+            return "house"
         case .clients:
             return "person.crop.circle.badge"
         case .calculator:
-            return "highlighter"
+            return "pencil.and.outline"
         case .materials:
             return "lightspectrum.horizontal"
         case .profile:
