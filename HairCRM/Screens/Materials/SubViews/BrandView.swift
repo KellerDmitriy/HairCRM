@@ -1,5 +1,5 @@
 //
-//  MarerialView.swift
+//  BrandView.swift
 //  HairCRM
 //
 //  Created by Келлер Дмитрий on 21.07.2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MarerialView: View {
+struct BrandView: View {
     
 
     
@@ -19,5 +19,5 @@ struct MarerialView: View {
 }
 
 #Preview {
-    MarerialView()
+    BrandView()
 }

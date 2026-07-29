@@ -9,19 +9,31 @@ import SwiftUI
 
 struct TabContent: View {
     let selectedTab: Tab
-    
+
     var body: some View {
-        Group {
-            switch selectedTab {
-            case .home:
+        switch selectedTab {
+        case .home:
+            NavigationStack {
                 HomeScreen()
-            case .materials:
-               MaterialsScreen()
-            case .calculator:
+            }
+
+        case .materials:
+            NavigationStack {
+                MaterialsScreen()
+            }
+
+        case .calculator:
+            NavigationStack {
                 CalculatorScreen()
-            case .clients:
+            }
+
+        case .clients:
+            NavigationStack {
                 ClientsScreen()
-            case .profile:
+            }
+
+        case .profile:
+            NavigationStack {
                 ProfileScreen()
             }
         }

@@ -7,19 +7,44 @@
 
 import Foundation
 
-struct Material: Identifiable {
-    let id: Int
-    let category: MaterialCategory
-    let brand: String
-    let title: String
-    let balance: Double
+struct Product: Identifiable {
+    let id: UUID
+    let category: ProductCategory
+    // Бренд
+    // Например: Goldwell
+    let brand: Brand?
+    // Линейка продукта
+    // Например: Topchic
+    let series: String?
+    // Название товара
+    // Например: 7NA
+    let name: String
+    // Остаток
+    let quantity: Double
+    // Единица измерения
+    let unit: ProductUnit
+    // Дата поступления
     let dateOfPurchase: Date?
-    let image: String?
+    // Фото товара
+    let imageData: Data?
 }
 
-struct MaterialCategory: Identifiable, Codable, Hashable {
+struct ProductCategory: Identifiable, Codable, Hashable {
     let id: UUID
     var name: String
+}
+
+struct Brand: Identifiable {
+    let id: UUID
+    let name: String
+    let image: Data?
+}
+
+// MARK: - Unit (единицы измерения)
+enum ProductUnit: String, Codable {
+    case piece = "шт"
+    case gram = "г"
+    case milliliter = "мл"
 }
 
 //enum MaterialCategory: String, CaseIterable, Codable {

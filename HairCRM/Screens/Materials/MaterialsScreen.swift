@@ -20,27 +20,26 @@ struct MaterialsScreen: View {
     
     // MARK: - Body
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color.appBackground
-                                   .ignoresSafeArea()
-                VStack(spacing: 4) {
-
-                    materialCategoriesCell()
-                        .padding(.bottom, 5)
-                    Spacer()
-                }
-                .padding()
-            }
+        VStack(spacing: 4) {
+            materialCategoriesCell()
+                .padding(.bottom, 5)
+            Spacer()
         }
+        .padding(.top, 70)
+        .background(.appBackground)
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                ToolBarButton(icon: .plus) { showSearchFlow = true }
+            }
+            
             ToolbarItem(placement: .principal) {
                 ToolBarTitleView(title: Resources.Text.materials.localized)
             }
+            
             ToolbarItem(placement: .topBarTrailing) {
-                ToolBarButton { showSearchFlow = true }
+                ToolBarButton(icon: .searchWhite) { showSearchFlow = true }
             }
         }
     }
@@ -49,7 +48,7 @@ struct MaterialsScreen: View {
         return List {
             ForEach(viewModel.categories) { category in
                 NavigationLink {
-                    MaterialCategoryView(
+                    ProductCategoryScreen(
                         category: category,
                         viewModel: viewModel
                     )
@@ -62,11 +61,9 @@ struct MaterialsScreen: View {
         }
         .scrollContentBackground(.hidden)
         .listStyle(.plain)
-        .listRowSeparator(.hidden)
         .background(Color.clear)
         .frame(height: 400)
     }
-    
 }
 
 #Preview {

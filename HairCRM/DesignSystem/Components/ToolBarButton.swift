@@ -11,6 +11,7 @@ import SwiftUI
 struct ToolBarButton: View {
     
     // MARK: - Properties
+    let icon: ImageResource
     let action: () -> Void
     
     // MARK: - Drawing Constants
@@ -25,7 +26,7 @@ struct ToolBarButton: View {
     var body: some View {
         Button(action: action) {
             ZStack {
-                Image(.searchWhite)
+                Image(icon)
                     .resizable()
                     .scaledToFit()
                     .frame(width: Drawing.iconSize, height: Drawing.iconSize)

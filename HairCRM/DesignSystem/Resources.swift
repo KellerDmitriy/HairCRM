@@ -10,5 +10,6 @@ enum Resources {
     
     enum Text {
         static let materials = "склад"
+        static let notFound = "Нет товаров в данной категороии"
     }
 }

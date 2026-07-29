@@ -7,15 +7,16 @@
 import Foundation
 
 final class MaterialsViewModel: ObservableObject {
-    @Published var searchResults: [Material] = []
+    @Published var searchResults: [Product] = []
     
-    @Published var categories: [MaterialCategory] = [
-        MaterialCategory(id: UUID(), name: "Перманентный краситель"),
-        MaterialCategory(id: UUID(), name: "Тонирующий краситель"),
-        MaterialCategory(id: UUID(), name: "Окислители"),
-        MaterialCategory(id: UUID(), name: "Блондирующие препараты"),
-        MaterialCategory(id: UUID(), name: "Расходники"),
-        MaterialCategory(id: UUID(), name: "Инструменты")
+    @Published var categories: [ProductCategory] = [
+        ProductCategory(id: UUID(), name: "Перманентный краситель"),
+        ProductCategory(id: UUID(), name: "Тонирующий краситель"),
+        ProductCategory(id: UUID(), name: "Окислители"),
+        ProductCategory(id: UUID(), name: "Блондирующие препараты"),
+        ProductCategory(id: UUID(), name: "Уход за волосами"),
+        ProductCategory(id: UUID(), name: "Расходники"),
+        ProductCategory(id: UUID(), name: "Инструменты")
     ]
     
     
@@ -26,7 +27,7 @@ final class MaterialsViewModel: ObservableObject {
     }
     
     @Published var recentSearches: [String] = []
-    
+    @Published var products: [Product] = []
     
     // MARK: - Вebounce Search Task
     private func debounceSearchTask() {
@@ -48,7 +49,7 @@ final class MaterialsViewModel: ObservableObject {
     
 //    MARK: Categories
     func addCategory(name: String) {
-        categories.append(MaterialCategory(id: UUID(), name: name))
+        categories.append(ProductCategory(id: UUID(), name: name))
     }
     
     func deleteCategory(at offsets: IndexSet) {
