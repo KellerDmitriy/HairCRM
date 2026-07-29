@@ -15,14 +15,18 @@ struct ContentView: View {
         ZStack(alignment: .bottom) {
             VStack {
                 TabContent(selectedTab: selectedTab)
+                   
                 VStack {
                     Spacer()
                     TabbarView(
                         selectedTab: $selectedTab,
                         switchTab: switchTab
                     )
+                    
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea()
         }
     }
     

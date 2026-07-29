@@ -6,38 +6,118 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Product: Identifiable {
-    let id: UUID
-    let category: ProductCategory
+
+
+@Model
+final class Product {
+
+    // Уникальный идентификатор товара
+    var id: UUID
+
+    // Категория товара
+    var category: ProductCategory?
+
     // Бренд
     // Например: Goldwell
-    let brand: Brand?
+    var brand: Brand?
+
     // Линейка продукта
     // Например: Topchic
-    let series: String?
+    var series: String?
+
     // Название товара
     // Например: 7NA
-    let name: String
-    // Остаток
-    let quantity: Double
-    // Единица измерения
-    let unit: ProductUnit
-    // Дата поступления
-    let dateOfPurchase: Date?
-    // Фото товара
-    let imageData: Data?
-}
-
-struct ProductCategory: Identifiable, Codable, Hashable {
-    let id: UUID
     var name: String
+
+    // Текущий остаток
+    var quantity: Double
+
+    // Единица измерения
+    var unit: ProductUnit
+
+    // Дата поступления
+    var dateOfPurchase: Date?
+
+    // Фото товара
+    var imageData: Data?
+
+    init(
+        id: UUID = UUID(),
+        category: ProductCategory? = nil,
+        brand: Brand? = nil,
+        series: String? = nil,
+        name: String,
+        quantity: Double = 0,
+        unit: ProductUnit,
+        dateOfPurchase: Date? = nil,
+        imageData: Data? = nil
+    ) {
+        self.id = id
+        self.category = category
+        self.brand = brand
+        self.series = series
+        self.name = name
+        self.quantity = quantity
+        self.unit = unit
+        self.dateOfPurchase = dateOfPurchase
+        self.imageData = imageData
+    }
 }
 
-struct Brand: Identifiable {
-    let id: UUID
-    let name: String
-    let image: Data?
+// MARK: - ProductCategory
+@Model
+final class ProductCategory {
+    // Уникальный идентификатор категории
+    var id: UUID
+
+    // Название категории
+    // Например:
+    // Красители, Окислители, Уход
+    var name: String
+
+    // Товары данной категории
+    @Relationship(deleteRule: .nullify)
+    var products: [Product]
+
+    init(
+        id: UUID = UUID(),
+        name: String
+    ) {
+        self.id = id
+        self.name = name
+        self.products = []
+    }
+}
+
+// MARK: - Brand
+@Model
+final class Brand {
+    // Уникальный идентификатор бренда
+    var id: UUID
+
+    // Название бренда
+    // Например: Goldwell
+    var name: String
+
+    // Логотип / изображение бренда
+    var imageData: Data?
+
+    // Товары данного бренда
+    @Relationship(deleteRule: .nullify)
+    var products: [Product]
+
+    init(
+        id: UUID = UUID(),
+        name: String,
+        imageData: Data? = nil
+    ) {
+        self.id = id
+        self.name = name
+        self.imageData = imageData
+        self.products = []
+    }
 }
 
 // MARK: - Unit (единицы измерения)
@@ -47,36 +127,4 @@ enum ProductUnit: String, Codable {
     case milliliter = "мл"
 }
 
-//enum MaterialCategory: String, CaseIterable, Codable {
-//    case hairColor
-//    case developer
-//    case lightener
-//    case hairCare
-//    case consumables
-//    case tools
-//    case miscellaneous
-//    
-//    var title: String {
-//        switch self {
-//        case .hairColor: "Hair Color"
-//        case .developer: "Developer"
-//        case .lightener: "Lightener"
-//        case .hairCare: "Hair Care"
-//        case .consumables: "Consumables"
-//        case .tools: "Tools"
-//        case .miscellaneous: "Miscellaneous"
-//        }
-//    }
-//    
-//    var systemImage: String {
-//        switch self {
-//        case .hairColor: "paintpalette.fill"
-//        case .developer: "drop.fill"
-//        case .lightener: "sparkles"
-//        case .hairCare: "heart.text.square.fill"
-//        case .consumables: "shippingbox.fill"
-//        case .tools: "scissors"
-//        case .miscellaneous: "square.grid.2x2.fill"
-//        }
-//    }
-//}
+
