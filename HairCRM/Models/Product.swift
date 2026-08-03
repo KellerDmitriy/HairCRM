@@ -8,11 +8,36 @@
 import Foundation
 import SwiftData
 
+@Model
+final class ProductGroup {
 
+    var id: UUID
+
+    // Основной раздел
+    // Красители
+    // Уход
+    // Расходники
+    var name: String
+
+
+    @Relationship(
+        deleteRule: .deny,
+        inverse: \ProductCategory.group
+    )
+    var categories: [ProductCategory]
+
+
+    init(
+        name: String
+    ) {
+        self.id = UUID()
+        self.name = name
+        self.categories = []
+    }
+}
 
 @Model
 final class Product {
-
     // Уникальный идентификатор товара
     var id: UUID
 
@@ -36,7 +61,16 @@ final class Product {
 
     // Единица измерения
     var unit: ProductUnit
+    
+    // Минимальный остаток
+    var minimumQuantity: Double
 
+    // Количество использований
+    var usageCount: Int
+    
+    // Последнее использование
+    var lastUsedAt: Date?
+    
     // Дата поступления
     var dateOfPurchase: Date?
 
@@ -44,23 +78,28 @@ final class Product {
     var imageData: Data?
 
     init(
-        id: UUID = UUID(),
         category: ProductCategory? = nil,
         brand: Brand? = nil,
         series: String? = nil,
         name: String,
         quantity: Double = 0,
         unit: ProductUnit,
+        minimumQuantity: Double,
+        usageCount: Int = 0,
+        lastUsedAt: Date? = nil,
         dateOfPurchase: Date? = nil,
         imageData: Data? = nil
     ) {
-        self.id = id
+        self.id = UUID()
         self.category = category
         self.brand = brand
         self.series = series
         self.name = name
         self.quantity = quantity
         self.unit = unit
+        self.minimumQuantity = minimumQuantity
+        self.usageCount = usageCount
+        self.lastUsedAt = lastUsedAt
         self.dateOfPurchase = dateOfPurchase
         self.imageData = imageData
     }
@@ -69,24 +108,34 @@ final class Product {
 // MARK: - ProductCategory
 @Model
 final class ProductCategory {
-    // Уникальный идентификатор категории
+
     var id: UUID
 
-    // Название категории
     // Например:
-    // Красители, Окислители, Уход
+    // Перманентные красители
+    // Тонирующие красители
+    // Маски
+    // Перчатки
     var name: String
 
-    // Товары данной категории
-    @Relationship(deleteRule: .nullify)
+
+    var group: ProductGroup?
+
+    @Relationship(
+        deleteRule: .deny,
+        inverse: \Product.category
+    )
     var products: [Product]
 
+
     init(
-        id: UUID = UUID(),
-        name: String
+        name: String,
+        group: ProductGroup? = nil
     ) {
-        self.id = id
+
+        self.id = UUID()
         self.name = name
+        self.group = group
         self.products = []
     }
 }
@@ -105,15 +154,16 @@ final class Brand {
     var imageData: Data?
 
     // Товары данного бренда
-    @Relationship(deleteRule: .nullify)
+    @Relationship(deleteRule: .deny,
+                  inverse:  \Product.brand
+    )
     var products: [Product]
 
     init(
-        id: UUID = UUID(),
         name: String,
         imageData: Data? = nil
     ) {
-        self.id = id
+        self.id = UUID()
         self.name = name
         self.imageData = imageData
         self.products = []

@@ -10,16 +10,16 @@ import SwiftUI
 struct ProductCategoryScreen: View {
     
     let category: ProductCategory
-    @ObservedObject var viewModel: MaterialsViewModel
+ 
     @State private var showAddProductView = false
     @State private var showSuggestions = false
-    
+    @State private var searchText = ""
     // MARK: - Body
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack {
                 
-                if viewModel.products.isEmpty {
+                if category.products.isEmpty {
                     noProductsContent
                     
                 } else {
@@ -49,7 +49,7 @@ struct ProductCategoryScreen: View {
     private func searchView() -> some View {
           return CustomSearchBarView(
               isSearchPresented: $showSuggestions,
-              searchText: $viewModel.searchText,
+              searchText: $searchText,
               shouldHandleTextInput: true,
               fiterAction: {_ in }
           )
@@ -58,15 +58,9 @@ struct ProductCategoryScreen: View {
     
     // MARK: - Content Views
     private var productsView: some View {
-        ScrollView(showsIndicators: false) {
-            VStack {
-                ForEach(viewModel.products) { product in
-                    ProductCell(product: product)
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 5)
-                   
-                }
-            }
+        List(category.products) { product in
+
+            ProductCell(product: product)
         }
     }
     
@@ -82,8 +76,7 @@ struct ProductCategoryScreen: View {
     NavigationView{
         ProductCategoryScreen(
             category: ProductCategory(
-                id: UUID(),
-                name: "Краситель"),
-            viewModel: MaterialsViewModel())
+                name: "Краситель")
+        )
     }
 }

@@ -67,15 +67,11 @@ struct ProductCell: View {
     ProductCell(
         
         product: Product(
-            id: UUID(),
             category: ProductCategory.init(
-                id: UUID(),
                 name: "краска"
             ),
             brand: Brand(
-                id: UUID(),
-                name: "Goldwell",
-                image: nil
+                name: "Goldwell"
             ),
             
             series: "Topchic",
@@ -85,6 +81,7 @@ struct ProductCell: View {
             quantity: 8,
             
             unit: .piece,
+            minimumQuantity: 1.0,
             dateOfPurchase: Date(),
             imageData: nil
         )

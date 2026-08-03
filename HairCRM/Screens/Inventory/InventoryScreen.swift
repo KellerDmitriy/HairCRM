@@ -1,21 +1,50 @@
 //
-//  MaterialsScreen.swift
+//  InventoryScreen.swift
 //  HairCRM
 //
 //  Created by Келлер Дмитрий on 27.06.2025.
 //
 
 import SwiftUI
+import SwiftData
 
-struct MaterialsScreen: View {
-    @StateObject private var viewModel: MaterialsViewModel
+struct InventoryScreen: View {
+    @Environment(\.appContainer)
+    private var container
+
+    // MARK: - Body
+    var body: some View {
+        if let container {
+            InventoryContent(
+                viewModel: InventoryViewModel(
+                    inventoryService: container.inventoryService
+                )
+            )
+        }
+    }
+}
+
+struct InventoryContent: View {
+    
+    @StateObject
+    private var viewModel: InventoryViewModel
+    
+    @Query(
+        sort: \Product.name
+        )
+    private var products: [Product]
+    
+    @Query(
+        sort: \ProductCategory.name
+        )
+    private var productCategory: [ProductCategory]
     
     @State private var showSuggestions = true
     @State private var showSearchFlow = false
     
     // MARK: - Init
-    init() {
-        self._viewModel = StateObject(wrappedValue: MaterialsViewModel())
+    init(viewModel: InventoryViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     // MARK: - Body
@@ -25,7 +54,7 @@ struct MaterialsScreen: View {
                 .padding(.bottom, 5)
             Spacer()
         }
-        .padding(.top, 70)
+        .padding(.top)
         .background(.appBackground)
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
@@ -46,18 +75,17 @@ struct MaterialsScreen: View {
     
     private func materialCategoriesCell() -> some View {
         return List {
-            ForEach(viewModel.categories) { category in
+            ForEach(productCategory) { category in
                 NavigationLink {
                     ProductCategoryScreen(
-                        category: category,
-                        viewModel: viewModel
+                        category: category
                     )
                 } label: {
                     Text(category.name)
                 }
                 .listRowBackground(Color.clear)
             }
-            .onDelete(perform: viewModel.deleteCategory(at:))
+//            .onDelete(perform: viewModel.deleteCategory(at:))
         }
         .scrollContentBackground(.hidden)
         .listStyle(.plain)
@@ -67,7 +95,23 @@ struct MaterialsScreen: View {
 }
 
 #Preview {
-    NavigationView {
-        MaterialsScreen()
+    let container = try! ModelContainer(
+        for: 
+            Product.self,
+        ProductCategory.self,
+        ProductGroup.self,
+        Brand.self
+        ,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+
+    let appContainer = AppContainer(
+        context: container.mainContext
+    )
+
+    NavigationStack {
+        InventoryScreen()
     }
+    .modelContainer(container)
+    .environment(\.appContainer, appContainer)
 }

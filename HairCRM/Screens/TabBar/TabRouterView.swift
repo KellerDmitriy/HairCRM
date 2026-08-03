@@ -1,5 +1,5 @@
 //
-//  TabContent.swift
+//  TabRouterView.swift
 //  HairCRM
 //
 //  Created by Келлер Дмитрий on 21.07.2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TabContent: View {
+struct TabRouterView: View {
     let selectedTab: Tab
 
     var body: some View {
@@ -19,7 +19,7 @@ struct TabContent: View {
 
         case .materials:
             NavigationStack {
-                MaterialsScreen()
+                InventoryScreen()
             }
 
         case .calculator:

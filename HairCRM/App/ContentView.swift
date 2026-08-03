@@ -8,28 +8,43 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    @State private var selectedTab: Tab = .home
-    
+    @Environment(\.modelContext)
+    private var modelContext
+
+    @State
+    private var appContainer: AppContainer?
+
+    @State
+    private var selectedTab: Tab = .home
+
     var body: some View {
         ZStack(alignment: .bottom) {
-            VStack {
-                TabContent(selectedTab: selectedTab)
-                   
-                VStack {
-                    Spacer()
-                    TabbarView(
-                        selectedTab: $selectedTab,
-                        switchTab: switchTab
+            if let appContainer {
+                TabRouterView(selectedTab: selectedTab)
+                    .environment(
+                        \.appContainer,
+                        appContainer
                     )
-                    
-                }
+                    .task {
+                        let seeder = DatabaseSeeder(inventoryService: appContainer.inventoryService)
+                        seeder.seedIfNeeded()
+                    }
+
+                TabbarView(
+                    selectedTab: $selectedTab,
+                    switchTab: switchTab
+                )
+            } else {
+                ProgressView()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .ignoresSafeArea()
+        }
+        .task {
+            if appContainer == nil {
+                appContainer = AppContainer(context: modelContext)
+            }
         }
     }
-    
+
     func switchTab(_ tab: Tab) {
         selectedTab = tab
     }
