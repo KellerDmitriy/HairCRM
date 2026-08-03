@@ -30,15 +30,11 @@ struct InventoryContent: View {
     private var viewModel: InventoryViewModel
     
     @Query(
-        sort: \Product.name
-        )
-    private var products: [Product]
-    
-    @Query(
         sort: \ProductCategory.name
         )
     private var productCategory: [ProductCategory]
     
+    @State private var showAddCategory = false
     @State private var showSuggestions = true
     @State private var showSearchFlow = false
     
@@ -60,8 +56,9 @@ struct InventoryContent: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                ToolBarButton(icon: .plus) { showSearchFlow = true }
+                ToolBarButton(icon: .plus) {  showAddCategory = true }
             }
+            
             
             ToolbarItem(placement: .principal) {
                 ToolBarTitleView(title: Resources.Text.materials.localized)
@@ -70,6 +67,9 @@ struct InventoryContent: View {
             ToolbarItem(placement: .topBarTrailing) {
                 ToolBarButton(icon: .searchWhite) { showSearchFlow = true }
             }
+        }
+        .sheet(isPresented: $showAddCategory) {
+            AddCategorySheet(viewModel: viewModel)
         }
     }
     
@@ -85,7 +85,12 @@ struct InventoryContent: View {
                 }
                 .listRowBackground(Color.clear)
             }
-//            .onDelete(perform: viewModel.deleteCategory(at:))
+            .onDelete { indexSet in
+                for index in indexSet {
+                    let category = productCategory[index]
+                    viewModel.deleteCategory(category)
+                }
+            }
         }
         .scrollContentBackground(.hidden)
         .listStyle(.plain)
@@ -93,6 +98,53 @@ struct InventoryContent: View {
         .frame(height: 400)
     }
 }
+
+
+struct AddCategorySheet: View {
+
+    @Environment(\.dismiss)
+    private var dismiss
+
+    @ObservedObject
+    var viewModel: InventoryViewModel
+
+    @State private var name = ""
+
+    // MARK: - Body
+    var body: some View {
+
+        VStack(spacing: 24) {
+
+            Text(Resources.Text.addNewCategory)
+                .font(.title3.bold())
+
+            TextField(
+                Resources.Text.nameCategory,
+                text: $name
+            )
+            .textFieldStyle(.roundedBorder)
+
+
+            Button {
+                viewModel.addCategory(
+                    name: name
+                )
+                dismiss()
+
+            } label: {
+                Text(Resources.Text.addNew)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+
+        }
+        .padding()
+        .presentationDetents(
+            [.height(250)]
+        )
+    }
+}
+
 
 #Preview {
     let container = try! ModelContainer(

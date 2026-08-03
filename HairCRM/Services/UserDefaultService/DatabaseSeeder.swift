@@ -34,9 +34,7 @@ final class DatabaseSeeder {
             return
         }
 
-
         createDefaultCategories()
-
 
         defaults.set(
             true,
