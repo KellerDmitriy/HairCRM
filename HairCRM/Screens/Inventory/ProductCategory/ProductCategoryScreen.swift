@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct ProductCategoryScreen: View {
+    @ObservedObject
+    var viewModel: InventoryViewModel
     
     let category: ProductCategory
  
     @State private var showAddProductView = false
     @State private var showSuggestions = false
     @State private var searchText = ""
+    
     // MARK: - Body
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -27,6 +30,7 @@ struct ProductCategoryScreen: View {
                 }
                 Spacer()
                 searchView()
+                    .padding(.bottom,90)
             }
             .padding()
             .frame(maxWidth: .infinity)
@@ -43,6 +47,9 @@ struct ProductCategoryScreen: View {
                 }
             }
         }
+        .sheet(isPresented: $showAddProductView) {
+            AddProductSheet(viewModel: viewModel, category: category)
+        }
     }
     
     // MARK: - Search Views
@@ -50,8 +57,9 @@ struct ProductCategoryScreen: View {
           return CustomSearchBarView(
               isSearchPresented: $showSuggestions,
               searchText: $searchText,
+              scope: .products,
               shouldHandleTextInput: true,
-              fiterAction: {_ in }
+              filterAction: {_ in }
           )
           .zIndex(1)
       }
@@ -61,7 +69,11 @@ struct ProductCategoryScreen: View {
         List(category.products) { product in
 
             ProductCell(product: product)
+                .listRowBackground(Color.clear)
         }
+        .scrollContentBackground(.hidden)
+        .listStyle(.plain)
+        .background(Color.clear)
     }
     
     private var noProductsContent: some View {
@@ -72,10 +84,25 @@ struct ProductCategoryScreen: View {
     }
 }
 
+import SwiftData
 #Preview {
+    let container = try! ModelContainer(
+        for:
+            Product.self,
+        ProductCategory.self,
+        ProductGroup.self,
+        Brand.self
+        ,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+
+    let appContainer = AppContainer(
+        context: container.mainContext
+    )
+    
     NavigationView{
         ProductCategoryScreen(
-            category: ProductCategory(
+            viewModel: InventoryViewModel(inventoryService: appContainer.inventoryService), category: ProductCategory(
                 name: "Краситель")
         )
     }

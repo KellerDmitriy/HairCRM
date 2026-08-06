@@ -48,9 +48,7 @@ final class InventoryViewModel: ObservableObject {
     func deleteCategory(_ category: ProductCategory) { try? inventoryService.deleteCategory(category) }
     
     // MARK: Brand
-    func addBrand(
-        name: String
-    ) {
+    func addBrand(name: String) {
         
         let brand = Brand(
             name: name

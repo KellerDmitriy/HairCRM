@@ -11,7 +11,7 @@ import SwiftData
 struct InventoryScreen: View {
     @Environment(\.appContainer)
     private var container
-
+    
     // MARK: - Body
     var body: some View {
         if let container {
@@ -31,12 +31,21 @@ struct InventoryContent: View {
     
     @Query(
         sort: \ProductCategory.name
-        )
+    )
     private var productCategory: [ProductCategory]
+    
+    @Query(sort: \Brand.name)
+    private var brands: [Brand]
     
     @State private var showAddCategory = false
     @State private var showSuggestions = true
     @State private var showSearchFlow = false
+    @State private var showBrandSelection = false
+    
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     
     // MARK: - Init
     init(viewModel: InventoryViewModel) {
@@ -45,20 +54,31 @@ struct InventoryContent: View {
     
     // MARK: - Body
     var body: some View {
-        VStack(spacing: 4) {
-            materialCategoriesCell()
-                .padding(.bottom, 5)
-            Spacer()
+        ScrollView(showsIndicators: false) {
+            
+            categoriesSection()
+             
+            addBrandSection()
+                .padding(.bottom, 16)
+
+            brandsSection()
+
         }
+        .padding(20)
         .padding(.top)
+        
         .background(.appBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(.white.opacity(0.08), lineWidth: 1)
+        }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 ToolBarButton(icon: .plus) {  showAddCategory = true }
             }
-            
             
             ToolbarItem(placement: .principal) {
                 ToolBarTitleView(title: Resources.Text.materials.localized)
@@ -68,87 +88,83 @@ struct InventoryContent: View {
                 ToolBarButton(icon: .searchWhite) { showSearchFlow = true }
             }
         }
+        
         .sheet(isPresented: $showAddCategory) {
             AddCategorySheet(viewModel: viewModel)
         }
     }
     
-    private func materialCategoriesCell() -> some View {
-        return List {
+    
+    // MARK: - Categories Section
+    private func categoriesSection() -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(Resources.Text.categories)
+                .airbnbCerealFont(.medium, size: 20)
+                .foregroundStyle(.secondary).opacity(0.6)
+            
             ForEach(productCategory) { category in
                 NavigationLink {
                     ProductCategoryScreen(
+                        viewModel: viewModel,
                         category: category
                     )
                 } label: {
-                    Text(category.name)
-                }
-                .listRowBackground(Color.clear)
-            }
-            .onDelete { indexSet in
-                for index in indexSet {
-                    let category = productCategory[index]
-                    viewModel.deleteCategory(category)
+                    HStack {
+                        Text(category.name)
+                            .airbnbCerealFont(.medium, size: 15)
+                        
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
+                    .background(.appBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
             }
         }
-        .scrollContentBackground(.hidden)
-        .listStyle(.plain)
-        .background(Color.clear)
-        .frame(height: 400)
+        .buttonStyle(.plain)
     }
-}
-
-
-struct AddCategorySheet: View {
-
-    @Environment(\.dismiss)
-    private var dismiss
-
-    @ObservedObject
-    var viewModel: InventoryViewModel
-
-    @State private var name = ""
-
-    // MARK: - Body
-    var body: some View {
-
-        VStack(spacing: 24) {
-
-            Text(Resources.Text.addNewCategory)
-                .font(.title3.bold())
-
-            TextField(
-                Resources.Text.nameCategory,
-                text: $name
-            )
-            .textFieldStyle(.roundedBorder)
-
-
-            Button {
-                viewModel.addCategory(
-                    name: name
-                )
-                dismiss()
-
-            } label: {
-                Text(Resources.Text.addNew)
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderedProminent)
-
+    
+    // MARK: - Add BrandSection
+    private func addBrandSection() -> some View {
+        
+        SelectionField(
+            title: Resources.Text.addNewBrand,
+            value: nil
+        ) {
+            showBrandSelection = true
         }
-        .padding()
-        .presentationDetents(
-            [.height(250)]
-        )
+        .shadow(radius: 12)
+    }
+    
+    // MARK: - BrandsSection
+    private func brandsSection() -> some View {
+        
+        VStack(alignment: .leading, spacing: 12) {
+            
+            Text(Resources.Text.brands)
+                .airbnbCerealFont(.medium, size: 20)
+                .foregroundStyle(.secondary).opacity(0.6)
+            
+            LazyVGrid(
+                columns: columns,
+                spacing: 16
+            ) {
+                
+                ForEach(brands) { brand in
+                    
+                    BrandCard(brand: brand)
+                }
+            }
+        }
     }
 }
 
 
 #Preview {
     let container = try! ModelContainer(
-        for: 
+        for:
             Product.self,
         ProductCategory.self,
         ProductGroup.self,
@@ -156,11 +172,11 @@ struct AddCategorySheet: View {
         ,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true)
     )
-
+    
     let appContainer = AppContainer(
         context: container.mainContext
     )
-
+    
     NavigationStack {
         InventoryScreen()
     }

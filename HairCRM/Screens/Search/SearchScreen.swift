@@ -24,8 +24,9 @@ struct SearchScreen: View {
             CustomSearchBarView(
                 isSearchPresented: $showSuggestion,
                 searchText: $viewModel.searchText,
+                scope: .products,
                 shouldHandleTextInput: true,
-                fiterAction: {_ in }
+                filterAction: {_ in }
             )
             .padding(.horizontal)
             .padding(.top)

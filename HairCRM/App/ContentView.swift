@@ -25,15 +25,12 @@ struct ContentView: View {
                         \.appContainer,
                         appContainer
                     )
-                    .task {
-                        let seeder = DatabaseSeeder(inventoryService: appContainer.inventoryService)
-                        seeder.seedIfNeeded()
-                    }
 
                 TabbarView(
                     selectedTab: $selectedTab,
                     switchTab: switchTab
                 )
+                .ignoresSafeArea(.keyboard)
             } else {
                 ProgressView()
             }

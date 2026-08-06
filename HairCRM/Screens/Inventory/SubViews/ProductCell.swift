@@ -14,23 +14,35 @@ struct ProductCell: View {
     // MARK: - Body
     var body: some View {
         ZStack {
-            HStack(spacing: 12)  {
+            HStack(spacing: 12) {
+                
                 productImage
                 
-                if let productSeries = product.series {
-                    Text("\(productSeries):")
-                }
                 Text(product.name)
+                    .airbnbCerealFont(AirbnbCerealFont.book, size: 20)
+                VStack(alignment: .leading, spacing: 4) {
+                    
+                    if let series = product.series {
+                        Text(series)
+                            .airbnbCerealFont(AirbnbCerealFont.book, size: 12)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    if let brand = product.brand {
+                        Text(brand.name)
+                            .airbnbCerealFont(AirbnbCerealFont.book, size: 12)
+                            .foregroundStyle(.secondary)
+                    }
+                }
                 
                 Spacer()
                 
                 quantityView
-                    .padding()
             }
         }
         .padding(.vertical, 8)
-        .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 10))
+        .listRowBackground(Color.clear)
     }
     
     //    MARK: Image

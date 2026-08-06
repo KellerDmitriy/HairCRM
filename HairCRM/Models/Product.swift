@@ -171,7 +171,7 @@ final class Brand {
 }
 
 // MARK: - Unit (единицы измерения)
-enum ProductUnit: String, Codable {
+enum ProductUnit: String, Codable, CaseIterable {
     case piece = "шт"
     case gram = "г"
     case milliliter = "мл"
