@@ -12,15 +12,7 @@ final class InventoryViewModel: ObservableObject {
     
     private let inventoryService: InventoryServiceProtocol
     
-    @Published var searchResults: [Product] = []
-    
-    @Published var searchText: String = "" {
-        didSet {
-            debounceSearchTask()
-        }
-    }
-    
-    @Published var recentSearches: [String] = []
+    @Published var appError: InventoryError?
     
     
     // MARK: - Init
@@ -28,35 +20,103 @@ final class InventoryViewModel: ObservableObject {
         self.inventoryService = inventoryService
     }
     
-    
-    // MARK: - Вebounce Search Task
-    private func debounceSearchTask() {
-        
+    // MARK: - Handle Error
+    private func handleError(_ error: Error) {
+        if let inventoryError = error as? InventoryError {
+            appError = inventoryError
+        } else {
+            appError = .unknown(error)
+        }
     }
     
-    // MARK: Product
-    func addProduct(_ product: Product) { try? inventoryService.createProduct(product) }
     
-    func deleteProduct(_ product: Product) { try? inventoryService.deleteProduct(product) }
+    // MARK: Product
+    func addProduct(_ product: Product) {
+        guard !product.name.isEmpty else {
+            appError = .emptyName
+            return
+        }
+        
+        guard product.quantity > 0 else {
+            appError = .emptyQuantity
+            return
+        }
+        
+        do {
+            try inventoryService.createProduct(product)
+        } catch {
+            handleError(error)
+        }
+    }
+    
+    func deleteProduct(_ product: Product) {
+        do {
+            try inventoryService.deleteProduct(product)
+        } catch {
+            handleError(error)
+        }
+    }
     
     // MARK: Categories
     func addCategory(name: String) {
         let category = ProductCategory(name: name)
-        try? inventoryService.createCategory(category)
+        do {
+            try inventoryService.createCategory(category)
+        } catch {
+            handleError(error)
+        }
     }
     
     func deleteCategory(_ category: ProductCategory) { try? inventoryService.deleteCategory(category) }
     
     // MARK: Brand
-    func addBrand(name: String) {
+    func addBrand(name: String,imageData: Data?) {
         
-        let brand = Brand(
-            name: name
-        )
+        let cleanName = name.cleaned
         
-        try? inventoryService.createBrand(brand)
+        guard !cleanName.isEmpty else {
+            appError = .emptyName
+            return
+        }
+        
+        do {
+            let brand = Brand(
+                name: cleanName,
+                imageData: imageData
+            )
+            try inventoryService.createBrand(brand)
+        } catch {
+            handleError(error)
+        }
     }
     
-    func deleteBrand(_ brand: Brand) { try? inventoryService.deleteBrand(brand) }
+    func updateBrand(_ brand: Brand,name: String,imageData: Data?) {
+        let cleanName = name.cleaned
+
+        guard !cleanName.isEmpty else {
+            appError = .emptyName
+            return
+        }
+
+        brand.name = cleanName
+        brand.imageData = imageData
+
+        do {
+            try inventoryService.save()
+        } catch {
+            handleError(error)
+        }
+    }
     
+    func deleteBrand(_ brand: Brand) {
+        guard brand.products.isEmpty else {
+            appError = .brandHasProducts(brand.name)
+            return
+        }
+        do {
+            try inventoryService.deleteBrand(brand)
+        } catch {
+            handleError(error)
+        }
+    }
 }

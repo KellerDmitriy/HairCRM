@@ -23,11 +23,13 @@ struct BrandCard: View {
                     .resizable()
                     .scaledToFit()
                     .frame(height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
 
             } else {
                 Image(systemName: "shippingbox")
                     .font(.system(size: 40))
                     .foregroundStyle(.secondary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
             }
 
             Text(brand.name)

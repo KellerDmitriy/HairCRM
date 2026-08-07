@@ -25,4 +25,7 @@ protocol InventoryServiceProtocol {
 
     func createBrand(_ brand: Brand) throws
     func deleteBrand(_ brand: Brand) throws
+    
+    // MARK: - Persistence
+    func save() throws
 }

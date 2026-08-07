@@ -29,7 +29,7 @@ struct SelectionField: View {
                 HStack(spacing: Drawing.spacing) {
                     Text(title)
                         .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                        .foregroundStyle(.secondary).opacity(0.6)
+                        .foregroundStyle(.secondary)
                     Text(value ?? "")
                         .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
                         .foregroundStyle(.secondary)
@@ -37,7 +37,7 @@ struct SelectionField: View {
                 Spacer()
 
                 Image(systemName: "plus")
-                    .foregroundStyle(.secondary).opacity(0.6)
+                    .foregroundStyle(.secondary)
             }
         }
         .buttonStyle(.plain)

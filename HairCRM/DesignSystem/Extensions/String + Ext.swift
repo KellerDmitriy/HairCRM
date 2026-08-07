@@ -26,3 +26,13 @@ extension String {
         NSLocalizedString(self, comment: "")
     }
 }
+
+// удаляем пробелы вначале и вконце
+extension String {
+    var cleaned: String {
+        trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+    }
+}
+

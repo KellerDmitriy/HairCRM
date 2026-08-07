@@ -50,4 +50,10 @@ final class InventoryService: InventoryServiceProtocol {
     func deleteBrand(_ brand: Brand) throws {
         try service.delete(brand)
     }
+    
+    // MARK: - Persistence
+
+    func save() throws {
+        try service.save()
+    }
 }

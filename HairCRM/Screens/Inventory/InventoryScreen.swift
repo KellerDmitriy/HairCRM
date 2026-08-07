@@ -42,6 +42,7 @@ struct InventoryContent: View {
     @State private var showSearchFlow = false
     @State private var showBrandSelection = false
     
+    
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -57,22 +58,27 @@ struct InventoryContent: View {
         ScrollView(showsIndicators: false) {
             
             categoriesSection()
-             
+                .padding()
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(.white.opacity(0.08), lineWidth: 1)
+                }
+            
             addBrandSection()
-                .padding(.bottom, 16)
-
+                .padding()
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(.white.opacity(0.08), lineWidth: 1)
+                }
+            
             brandsSection()
-
+            
         }
         .padding(20)
         .padding(.top)
         
         .background(.appBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .overlay {
-            RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(.white.opacity(0.08), lineWidth: 1)
-        }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -88,12 +94,34 @@ struct InventoryContent: View {
                 ToolBarButton(icon: .searchWhite) { showSearchFlow = true }
             }
         }
+        .alert(item: $viewModel.appError) { error in
+            Alert(
+                title: Text(Resources.Text.error),
+                message:  Text(error.localizedDescription),
+                dismissButton: .default(Text(Resources.Text.ok))
+            )
+        }
         
         .sheet(isPresented: $showAddCategory) {
             AddCategorySheet(viewModel: viewModel)
         }
+        
+        .sheet(isPresented: $showBrandSelection) {
+            AddBrandSheed(
+                brands: brands,
+                onCreate: { name, imageData in
+                    viewModel.addBrand(name: name, imageData: imageData)
+                },
+                onUpdate: { brand, name, imageData  in
+                    viewModel.updateBrand(brand, name: name, imageData: imageData)
+                },
+                onDelete: { brand in
+                    viewModel.deleteBrand(brand)
+                }
+            )
+            .presentationDetents([.medium, .large])
+        }
     }
-    
     
     // MARK: - Categories Section
     private func categoriesSection() -> some View {
@@ -135,7 +163,6 @@ struct InventoryContent: View {
         ) {
             showBrandSelection = true
         }
-        .shadow(radius: 12)
     }
     
     // MARK: - BrandsSection
@@ -153,14 +180,12 @@ struct InventoryContent: View {
             ) {
                 
                 ForEach(brands) { brand in
-                    
                     BrandCard(brand: brand)
                 }
             }
         }
     }
 }
-
 
 #Preview {
     let container = try! ModelContainer(

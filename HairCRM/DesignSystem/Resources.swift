@@ -35,5 +35,10 @@ enum Resources {
         static let searchCategory = "поиск категорий"
         static let searchClient = "поиск клиентов"
         static let searchService = "поиск клиентов"
+        
+        static let ok = "ok"
+        static let delete = "Удалить"
+        static let save = "Сохранить"
+        static let error = "Ошибка"
     }
 }

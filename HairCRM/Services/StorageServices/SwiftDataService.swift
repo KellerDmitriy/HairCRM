@@ -34,4 +34,8 @@ final class SwiftDataService {
         context.delete(object)
         try context.save()
     }
+    
+    func save() throws {
+        try context.save()
+    }
 }

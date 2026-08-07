@@ -28,7 +28,6 @@ struct AddProductSheet: View {
     @State private var quantity = ""
     
     @State private var unit: ProductUnit = .gram
-    @State private var showBrandSelection = false
     
     // MARK: - Drawing Constants
     private struct Drawing {
@@ -56,13 +55,20 @@ struct AddProductSheet: View {
                     )
                     .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
                     
-                    SelectionField(
-                        title: Resources.Text.brand,
-                        value: selectedBrand?.name
+                    Picker(
+                        Resources.Text.brand,
+                        selection: $selectedBrand
                     ) {
-                        showBrandSelection = true
+                        
+                        ForEach(brands) { brand in
+                            Text(brand.name)
+                                .tag(brand)
+                        }
                     }
-                   
+                    .pickerStyle(.menu)
+                    .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
+                    .foregroundStyle(.secondary).opacity(0.6)
+                    .tint(.secondary)
                 }
                 
                 Section(Resources.Text.inventory) {
@@ -103,27 +109,10 @@ struct AddProductSheet: View {
                     viewModel.addProduct(product)
                     dismiss()
                 }
-              
+                
             }
             .background(.appBackground)
-        }
-        
-        .sheet(
-            isPresented: $showBrandSelection
-        ) {
             
-            SelectionSheet(
-                title: "Бренды",
-                items: brands,
-                selectedItem: $selectedBrand,
-                displayName: {
-                    $0.name
-                },
-                onCreate: { name in
-                    viewModel.addBrand(name: name)
-                }
-            )
-            .padding(.horizontal)
         }
         .navigationTitle(Resources.Text.addProduct)
         .navigationBarTitleDisplayMode(.inline)
@@ -156,7 +145,7 @@ struct AddProductSheet: View {
                 .disabled(name.isEmpty)
             }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large, .large])
     }
 }
 
