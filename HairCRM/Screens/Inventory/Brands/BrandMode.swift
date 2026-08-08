@@ -7,18 +7,26 @@
 
 import SwiftUI
 
-enum BrandMode {
+enum BrandMode: Identifiable {
     case create
     case edit(Brand)
-}
 
-extension BrandMode {
+    var id: String {
+        switch self {
+        case .create:
+            return "create"
+
+        case .edit(let brand):
+            return "edit-\(brand.persistentModelID)"
+        }
+    }
+    
     var isEdit: Bool {
         switch self {
-        case .edit:
-            return true
         case .create:
             return false
+        case .edit:
+            return true
         }
     }
 }

@@ -119,7 +119,7 @@ struct InventoryContent: View {
                     viewModel.deleteBrand(brand)
                 }
             )
-            .presentationDetents([.medium, .large])
+            
         }
     }
     

@@ -9,6 +9,9 @@ import SwiftUI
 import PhotosUI
 
 struct BrandFormView: View {
+    @Environment(\.dismiss)
+    private var dismiss
+    
     let mode: BrandMode
 
     @Binding var name: String
@@ -21,6 +24,14 @@ struct BrandFormView: View {
     // MARK: - Body
     var body: some View {
         VStack(spacing: 20) {
+            Text(
+                mode.isEdit
+                 ? Resources.Text.edit
+                 : Resources.Text.addNewBrand
+            )
+                .airbnbCerealFont(.medium, size: 20)
+                .foregroundStyle(.secondary).opacity(0.6)
+            
             PhotosPicker(
                 selection: $selectedImage,
                 matching: .images
@@ -59,18 +70,25 @@ struct BrandFormView: View {
                 text: $name
             )
             .textFieldStyle(.roundedBorder)
-
-            Button {
-                onSave()
-            } label: {
-                Text(
-                    mode.isEdit
-                    ? Resources.Text.save
-                    : Resources.Text.addNew
-                )
+            HStack {
+                Button {
+                    onSave()
+                } label: {
+                    Text(
+                        mode.isEdit
+                        ? Resources.Text.save
+                        : Resources.Text.addNew
+                    )
+                }
+                Button(role: .destructive) {
+                    dismiss()
+                } label: {
+                   Text(Resources.Text.cancel)
+                }
             }
             .buttonStyle(.borderedProminent)
         }
         .padding()
+        .background(.appBackground)
     }
 }

@@ -26,3 +26,11 @@ extension View {
         }
     }
 }
+
+extension View {
+    func appScreenBackground() -> some View {
+        self
+            .background(.appBackground)
+            .scrollContentBackground(.hidden)
+    }
+}

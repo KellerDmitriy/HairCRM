@@ -39,6 +39,7 @@ enum Resources {
         static let ok = "ok"
         static let delete = "Удалить"
         static let save = "Сохранить"
+        static let edit = "Редактировать"
         static let error = "Ошибка"
     }
 }
