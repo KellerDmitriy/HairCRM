@@ -55,7 +55,10 @@ final class Product {
     // Название товара
     // Например: 7NA
     var name: String
-
+    
+    /// Себестоимость одной единицы товара.
+    var cost: Double
+    
     // Текущий остаток
     var quantity: Double
 
@@ -82,6 +85,7 @@ final class Product {
         brand: Brand? = nil,
         series: String? = nil,
         name: String,
+        cost: Double,
         quantity: Double = 0,
         unit: ProductUnit,
         minimumQuantity: Double,
@@ -95,6 +99,7 @@ final class Product {
         self.brand = brand
         self.series = series
         self.name = name
+        self.cost = cost
         self.quantity = quantity
         self.unit = unit
         self.minimumQuantity = minimumQuantity

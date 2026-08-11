@@ -26,7 +26,7 @@ struct AddProductSheet: View {
     @State private var series = ""
     @State private var name = ""
     @State private var quantity = ""
-    
+    @State private var purchasePrice = ""
     @State private var unit: ProductUnit = .gram
     
     // MARK: - Drawing Constants
@@ -39,113 +39,168 @@ struct AddProductSheet: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            Form {
-                Section(Resources.Text.general) {
-                    
-                    TextField(
-                        Resources.Text.nameProduct,
-                        text: $name
-                    )
-                    .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                    
-                    
-                    TextField(
-                        Resources.Text.series,
-                        text: $series
-                    )
-                    .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                    
-                    Picker(
-                        Resources.Text.brand,
-                        selection: $selectedBrand
-                    ) {
+            VStack {
+                Form {
+                    Section(Resources.Text.general) {
                         
-                        ForEach(brands) { brand in
-                            Text(brand.name)
-                                .tag(brand)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                    .foregroundStyle(.secondary).opacity(0.6)
-                    .tint(.secondary)
-                }
-                
-                Section(Resources.Text.inventory) {
-                    
-                    TextField(
-                        Resources.Text.quantity,
-                        text: $quantity
-                    )
-                    .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                    .keyboardType(.decimalPad)
-                    
-                    Picker(
-                        "",
-                        selection: $unit
-                    ) {
+                        TextField(
+                            Resources.Text.nameProduct,
+                            text: $name
+                        )
+                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
                         
-                        ForEach(ProductUnit.allCases, id: \.self) { unit in
-                            Text(unit.rawValue)
-                                .tag(unit)
+                        
+                        TextField(
+                            Resources.Text.series,
+                            text: $series
+                        )
+                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
+                        
+                        Picker(
+                            Resources.Text.brand,
+                            selection: $selectedBrand
+                        ) {
+                            
+                            ForEach(brands) { brand in
+                                Text(brand.name)
+                                    .tag(brand)
+                            }
                         }
+                        .pickerStyle(.menu)
+                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
+                        .foregroundStyle(.secondary).opacity(0.6)
+                        .tint(.secondary)
                     }
-                    .pickerStyle(.palette)
-                    .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                    .foregroundStyle(.secondary).opacity(0.6)
-                    .tint(.secondary)
+                    
+                    Section(Resources.Text.store.capitalized) {
+                        
+                        TextField(
+                            Resources.Text.cost,
+                            text: $purchasePrice
+                        )
+                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
+                        .keyboardType(.decimalPad)
+                        
+                        TextField(
+                            Resources.Text.quantity,
+                            text: $quantity
+                        )
+                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
+                        .keyboardType(.decimalPad)
+                        
+                        Picker(
+                            "",
+                            selection: $unit
+                        ) {
+                            
+                            ForEach(ProductUnit.allCases, id: \.self) { unit in
+                                Text(unit.rawValue)
+                                    .tag(unit)
+                            }
+                        }
+                        .pickerStyle(.palette)
+                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
+                        .foregroundStyle(.secondary).opacity(0.6)
+                        .tint(.secondary)
+                        
+                    }
+                    Button( Resources.Text.addNew) {
+                        addProduct()
+                    }
                     
                 }
-                Button( Resources.Text.addNew) {
-                    let product = Product(
-                        category: category,
-                        brand: selectedBrand,
-                        series: series.isEmpty ? nil : series,
-                        name: name,
-                        quantity: Double(quantity.replacingOccurrences(of: ",", with: ".")) ?? 0,
-                        unit: unit,
-                        minimumQuantity: 1
-                    )
-                    viewModel.addProduct(product)
-                    dismiss()
-                }
+                .background(.appBackground)
                 
             }
-            .background(.appBackground)
-            
-        }
-        .navigationTitle(Resources.Text.addProduct)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            .navigationTitle(Resources.Text.addProduct)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Button(Resources.Text.cancel) {
+                        dismiss()
+                    }
+                }
                 
-                Button(Resources.Text.cancel) {
-                    dismiss()
+                ToolbarItem(placement: .topBarTrailing) {
+                    
+                    Button(Resources.Text.addNew) {
+                        
+                        addProduct()
+                    }
+                    .disabled(name.isEmpty)
                 }
             }
-            
-            ToolbarItem(placement: .topBarTrailing) {
-                
-                Button(Resources.Text.addNew) {
-                    
-                    let product = Product(
-                        category: category,
-                        brand: selectedBrand,
-                        series: series.isEmpty ? nil : series,
-                        name: name,
-                        quantity: Double(quantity) ?? 0,
-                        unit: unit,
-                        minimumQuantity: 1.0
-                    )
-                    
-                    viewModel.addProduct(product)
-                    
-                    dismiss()
-                }
-                .disabled(name.isEmpty)
+            .alert(item: $viewModel.appError) { error in
+                Alert(
+                    title: Text(Resources.Text.error),
+                    message:  Text(error.localizedDescription),
+                    dismissButton: .default(Text(Resources.Text.ok))
+                )
             }
         }
         .presentationDetents([.large, .large])
+    }
+    
+//    Helpers
+    private func addProduct() {
+        
+        let cleanName = name.cleaned
+        
+        guard !cleanName.isEmpty else {
+            return
+        }
+        
+        let quantityValue = Double(
+            quantity.replacingOccurrences(of: ",", with: ".")
+        ) ?? 0
+        
+        let purchasePriceValue = Double(
+            purchasePrice.replacingOccurrences(of: ",", with: ".")
+        ) ?? 0
+        
+        guard quantityValue > 0 else {
+            return
+        }
+        
+        guard purchasePriceValue > 0 else {
+            return
+        }
+        
+        let cost = purchasePriceValue / quantityValue
+        
+        let product = Product(
+            category: category,
+            brand: selectedBrand,
+            series: series.cleaned.isEmpty
+                ? nil
+                : series.cleaned,
+            name: cleanName,
+            cost: cost,
+            quantity: quantityValue,
+            unit: unit,
+            minimumQuantity: 1.0
+        )
+        
+        viewModel.addProduct(product)
+        dismiss()
+    }
+    
+// расчитываем себестоимость
+    private var calculatedCost: Double {
+        let quantityValue = Double(
+            quantity.replacingOccurrences(of: ",", with: ".")
+        ) ?? 0
+        
+        let priceValue = Double(
+            purchasePrice.replacingOccurrences(of: ",", with: ".")
+        ) ?? 0
+        
+        guard quantityValue > 0 else {
+            return 0
+        }
+        
+        return priceValue / quantityValue
     }
 }
 

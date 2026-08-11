@@ -20,6 +20,12 @@ struct InventoryScreen: View {
                     inventoryService: container.inventoryService
                 )
             )
+            .task {
+                let seeder = DatabaseSeeder(
+                    inventoryService: container.inventoryService
+                )
+                seeder.seedIfNeeded()
+            }
         }
     }
 }
@@ -87,7 +93,7 @@ struct InventoryContent: View {
             }
             
             ToolbarItem(placement: .principal) {
-                ToolBarTitleView(title: Resources.Text.materials.localized)
+                ToolBarTitleView(title: Resources.Text.inventory.localized)
             }
             
             ToolbarItem(placement: .topBarTrailing) {
@@ -108,18 +114,9 @@ struct InventoryContent: View {
         
         .sheet(isPresented: $showBrandSelection) {
             AddBrandSheed(
-                brands: brands,
-                onCreate: { name, imageData in
-                    viewModel.addBrand(name: name, imageData: imageData)
-                },
-                onUpdate: { brand, name, imageData  in
-                    viewModel.updateBrand(brand, name: name, imageData: imageData)
-                },
-                onDelete: { brand in
-                    viewModel.deleteBrand(brand)
-                }
+                viewModel: viewModel,
+                brands: brands
             )
-            
         }
     }
     
@@ -137,6 +134,7 @@ struct InventoryContent: View {
                         category: category
                     )
                 } label: {
+               
                     HStack {
                         Text(category.name)
                             .airbnbCerealFont(.medium, size: 15)

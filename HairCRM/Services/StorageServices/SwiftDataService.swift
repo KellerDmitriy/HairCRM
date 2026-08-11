@@ -38,4 +38,9 @@ final class SwiftDataService {
     func save() throws {
         try context.save()
     }
+    
+    func rollback() {
+        context.rollback()
+    }
+    
 }

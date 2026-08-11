@@ -25,7 +25,12 @@ struct HairCRMApp: App {
                 Product.self,
                 ProductCategory.self,
                 ProductGroup.self,
-                Brand.self
+                Brand.self,
+
+                ClientModel.self,
+                Visit.self,
+                MaterialUsage.self,
+               
             ]
         )
     }

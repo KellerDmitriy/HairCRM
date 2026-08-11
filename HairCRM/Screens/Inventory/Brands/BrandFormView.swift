@@ -13,33 +13,33 @@ struct BrandFormView: View {
     private var dismiss
     
     let mode: BrandMode
-
+    
     @Binding var name: String
     @Binding var imageData: Data?
-
+    
     let onSave: () -> Void
-
+    
     @State private var selectedImage: PhotosPickerItem?
-
+    
     // MARK: - Body
     var body: some View {
         VStack(spacing: 20) {
             Text(
                 mode.isEdit
-                 ? Resources.Text.edit
-                 : Resources.Text.addNewBrand
+                ? Resources.Text.edit
+                : Resources.Text.addNewBrand
             )
-                .airbnbCerealFont(.medium, size: 20)
-                .foregroundStyle(.secondary).opacity(0.6)
+            .airbnbCerealFont(.medium, size: 20)
+            .foregroundStyle(.secondary).opacity(0.6)
             
             PhotosPicker(
                 selection: $selectedImage,
                 matching: .images
             ) {
-
+                
                 if let imageData,
                    let image = UIImage(data: imageData) {
-
+                    
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
@@ -64,7 +64,7 @@ struct BrandFormView: View {
                     imageData = ImageProcessor.resize(imageData: data)
                 }
             }
-
+            
             TextField(
                 Resources.Text.name,
                 text: $name
@@ -83,12 +83,11 @@ struct BrandFormView: View {
                 Button(role: .destructive) {
                     dismiss()
                 } label: {
-                   Text(Resources.Text.cancel)
+                    Text(Resources.Text.cancel)
                 }
             }
             .buttonStyle(.borderedProminent)
         }
         .padding()
-        .background(.appBackground)
     }
 }

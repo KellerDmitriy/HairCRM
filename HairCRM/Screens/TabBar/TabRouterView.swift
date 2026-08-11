@@ -29,7 +29,7 @@ struct TabRouterView: View {
 
         case .clients:
             NavigationStack {
-                ClientsScreen()
+                ClientScreen()
             }
 
         case .profile:

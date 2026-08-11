@@ -89,6 +89,7 @@ struct ProductCell: View {
             series: "Topchic",
             
             name: "7NA",
+            cost: 0.0,
             
             quantity: 8,
             

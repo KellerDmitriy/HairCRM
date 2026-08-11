@@ -13,11 +13,10 @@ struct AddBrandSheed: View {
     @Environment(\.dismiss)
     private var dismiss
     
-    let brands: [Brand]
+    @ObservedObject
+    var viewModel: InventoryViewModel
     
-    let onCreate: (String, Data?) -> Void
-    let onUpdate: (Brand, String, Data?) -> Void
-    let onDelete: (Brand) -> Void
+    let brands: [Brand]
     
     @State private var mode: BrandMode?
     
@@ -57,7 +56,13 @@ struct AddBrandSheed: View {
             }
         }
         .background(.appBackground)
-
+        .alert(item: $viewModel.appError) { error in
+            Alert(
+                title: Text(Resources.Text.error),
+                message:  Text(error.localizedDescription),
+                dismissButton: .default(Text(Resources.Text.ok))
+            )
+        }
         .sheet(item: $mode) { mode in
             BrandFormView(
                 mode: mode,
@@ -78,17 +83,10 @@ struct AddBrandSheed: View {
         
         switch mode {
         case .create:
-            onCreate(newItemName, imageData)
-            
+            viewModel.addBrand(name: newItemName, imageData: imageData)
         case .edit(let brand):
-            onUpdate(brand, newItemName, imageData)
-            
+            viewModel.updateBrand(brand, name: newItemName, imageData: imageData)
         }
-        
-        self.mode = nil
-//        newItemName = ""
-//        imageData = nil
-        
     }
 }
 
@@ -159,7 +157,7 @@ extension AddBrandSheed {
                         
                         // Delete
                         Button(role: .destructive) {
-                            onDelete(brand)
+                            viewModel.deleteBrand(brand)
                         } label: {
                             Label(
                                 Resources.Text.delete,

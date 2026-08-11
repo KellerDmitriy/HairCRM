@@ -10,7 +10,8 @@ enum Resources {
     
     enum Text {
         static let name = "Название"
-        static let materials = "склад"
+        static let store = "склад"
+        static let cost = "Цена закупки"
         static let notFound = "Нет товаров в данной категороии"
         static let addNewCategory = "Новая категория"
         static let categories = "Категории"
@@ -41,5 +42,7 @@ enum Resources {
         static let save = "Сохранить"
         static let edit = "Редактировать"
         static let error = "Ошибка"
+        
+        static let client = "Клиенты"
     }
 }

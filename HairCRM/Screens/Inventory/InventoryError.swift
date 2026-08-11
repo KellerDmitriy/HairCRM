@@ -16,7 +16,7 @@ enum InventoryError: LocalizedError, Identifiable {
     case duplicateBrand(String)
 
     case brandHasProducts(String)
-
+    case insufficientStock(String)
     case saveFailed
     case deleteFailed
 
@@ -48,6 +48,8 @@ enum InventoryError: LocalizedError, Identifiable {
             Сначала удалите или измените товары.
             """
 
+        case .insufficientStock(let name):
+            return "Не удалось сохранить данные"
         case .saveFailed:
             return "Не удалось сохранить данные"
 

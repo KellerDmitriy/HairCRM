@@ -46,8 +46,6 @@ struct AddCategorySheet: View {
             
         }
         .padding()
-        .presentationDetents(
-            [.height(250)]
-        )
+        .presentationDetents([.medium])
     }
 }
