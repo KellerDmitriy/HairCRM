@@ -8,25 +8,40 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    @State private var selectedTab: Tab = .home
-    
+    @Environment(\.modelContext)
+    private var modelContext
+
+    @State
+    private var appContainer: AppContainer?
+
+    @State
+    private var selectedTab: Tab = .home
+
     var body: some View {
         ZStack(alignment: .bottom) {
-            VStack {
-                TabContent(selectedTab: selectedTab)
-                VStack {
-                    Spacer()
-                    TabbarView(
-                        selectedTab: $selectedTab,
-                        switchTab: switchTab
+            if let appContainer {
+                TabRouterView(selectedTab: selectedTab)
+                    .environment(
+                        \.appContainer,
+                        appContainer
                     )
-                   
-                }
+
+                TabbarView(
+                    selectedTab: $selectedTab,
+                    switchTab: switchTab
+                )
+                .ignoresSafeArea(.keyboard)
+            } else {
+                ProgressView()
+            }
+        }
+        .task {
+            if appContainer == nil {
+                appContainer = AppContainer(context: modelContext)
             }
         }
     }
-    
+
     func switchTab(_ tab: Tab) {
         selectedTab = tab
     }
