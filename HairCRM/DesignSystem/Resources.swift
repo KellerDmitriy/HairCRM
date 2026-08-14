@@ -44,5 +44,11 @@ enum Resources {
         static let error = "Ошибка"
         
         static let client = "Клиенты"
+        static let addNewClient = "Добавить клиента"
+        static let editClient = "Редактировать данные клиента"
+        static let clientName = "Имя"
+        static let clientSurname = "Фамилия"
+        static let clientPhone = "Телефон"
+        static let clientNote = "Заметки"
     }
 }

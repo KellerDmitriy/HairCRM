@@ -13,24 +13,18 @@ struct ClientForm: View {
     
     // MARK: - Body
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(client.name)
-                Text(client.surname)
-                Text(client.phone)
+        AppFormCard {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(client.name)
+                    Text(client.surname)
+                    Text(client.phone)
+                }
+                Spacer()
             }
-            Spacer()
+            .airbnbCerealFont(.medium, size: 20)
+            .foregroundStyle(.secondary).opacity(0.8)
         }
-        .padding()
-        .airbnbCerealFont(.medium, size: 20)
-        .foregroundStyle(.secondary).opacity(0.8)
-        .frame(width: .infinity, height: 90)
-        .overlay {
-            RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(.white.opacity(0.08), lineWidth: 1)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .background(.appBackground)
     }
 }
 

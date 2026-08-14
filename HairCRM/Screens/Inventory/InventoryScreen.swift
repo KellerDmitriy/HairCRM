@@ -43,6 +43,12 @@ struct InventoryContent: View {
     @Query(sort: \Brand.name)
     private var brands: [Brand]
     
+    @State private var categoryMode: CategoryMode?
+    @State private var categoryName = ""
+
+    @State private var isCategoriesExpanded = true
+    @State private var isBrandsExpanded = true
+    
     @State private var showAddCategory = false
     @State private var showSuggestions = true
     @State private var showSearchFlow = false
@@ -62,28 +68,14 @@ struct InventoryContent: View {
     // MARK: - Body
     var body: some View {
         ScrollView(showsIndicators: false) {
-            
-            categoriesSection()
-                .padding()
-                .overlay {
-                    RoundedRectangle(cornerRadius: 16)
-                        .strokeBorder(.white.opacity(0.08), lineWidth: 1)
-                }
-            
-            addBrandSection()
-                .padding()
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 16)
-                        .strokeBorder(.white.opacity(0.08), lineWidth: 1)
-                }
-            
-            brandsSection()
-            
+        
+                categoriesSection()
+                
+                brandsSection()
         }
         .padding(20)
         .padding(.top)
-        
+        .padding(.bottom, 60)
         .background(.appBackground)
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
@@ -93,7 +85,7 @@ struct InventoryContent: View {
             }
             
             ToolbarItem(placement: .principal) {
-                ToolBarTitleView(title: Resources.Text.inventory.localized)
+                ToolBarTitleView(title: Resources.Text.store.localized)
             }
             
             ToolbarItem(placement: .topBarTrailing) {
@@ -110,6 +102,7 @@ struct InventoryContent: View {
         
         .sheet(isPresented: $showAddCategory) {
             AddCategorySheet(viewModel: viewModel)
+                .presentationDetents([.medium])
         }
         
         .sheet(isPresented: $showBrandSelection) {
@@ -122,64 +115,88 @@ struct InventoryContent: View {
     
     // MARK: - Categories Section
     private func categoriesSection() -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(Resources.Text.categories)
-                .airbnbCerealFont(.medium, size: 20)
-                .foregroundStyle(.secondary).opacity(0.6)
-            
-            ForEach(productCategory) { category in
-                NavigationLink {
-                    ProductCategoryScreen(
-                        viewModel: viewModel,
-                        category: category
-                    )
-                } label: {
-               
-                    HStack {
-                        Text(category.name)
-                            .airbnbCerealFont(.medium, size: 15)
+        AppFormCard {
+            VStack(alignment: .leading, spacing: 8) {
+                
+                // MARK: - Header
+                AppSectionHeader(
+                    title: Resources.Text.categories,
+                    isExpanded: $isCategoriesExpanded
+                )
+                
+                // MARK: - Categories
+                if isCategoriesExpanded {
+                    ForEach(productCategory) { category in
                         
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundStyle(.secondary)
+                        NavigationLink {
+                            ProductCategoryScreen(
+                                viewModel: viewModel,
+                                category: category
+                            )
+                        } label: {
+                            HStack {
+                                Text(category.name)
+                                    .airbnbCerealFont(.medium, size: 15)
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding()
+                            .background(.pink.opacity(0.5))
+                            .clipShape(
+                                RoundedRectangle(cornerRadius: 16)
+                            )
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .padding()
-                    .background(.appBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
             }
+            .animation(
+                .easeInOut(duration: 0.2),
+                value: isCategoriesExpanded
+            )
         }
-        .buttonStyle(.plain)
     }
     
     // MARK: - Add BrandSection
     private func addBrandSection() -> some View {
-        
-        SelectionField(
-            title: Resources.Text.addNewBrand,
-            value: nil
-        ) {
-            showBrandSelection = true
-        }
+        AppAddNewButton(
+                title: Resources.Text.addNewBrand,
+                value: nil
+            ) {
+                showBrandSelection = true
+            }
     }
     
     // MARK: - BrandsSection
     private func brandsSection() -> some View {
-        
-        VStack(alignment: .leading, spacing: 12) {
+        AppFormCard {
             
-            Text(Resources.Text.brands)
-                .airbnbCerealFont(.medium, size: 20)
-                .foregroundStyle(.secondary).opacity(0.6)
-            
-            LazyVGrid(
-                columns: columns,
-                spacing: 16
-            ) {
+            VStack(alignment: .leading, spacing: 8) {
+                AppSectionHeader(
+                    title: Resources.Text.brands,
+                    isExpanded: $isBrandsExpanded
+                )
                 
-                ForEach(brands) { brand in
-                    BrandCard(brand: brand)
+                if isBrandsExpanded {
+                    LazyVGrid(
+                        columns: columns,
+                        spacing: 16
+                    ) {
+                        
+                        ForEach(brands) { brand in
+                            BrandCard(brand: brand)
+                        }
+                    }
+                    .animation(
+                        .easeInOut(duration: 0.2),
+                        value: isBrandsExpanded
+                    )
                 }
+              addBrandSection()
+                
             }
         }
     }

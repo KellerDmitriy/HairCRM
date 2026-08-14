@@ -1,5 +1,5 @@
 //
-//  SelectionField.swift
+//  AppAddNewButton.swift
 //  HairCRM
 //
 //  Created by Келлер Дмитрий on 06.08.2026.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct SelectionField: View {
+struct AppAddNewButton: View {
 
     let title: String
     let value: String?
@@ -16,8 +16,8 @@ struct SelectionField: View {
     var action: () -> Void
     
     private struct Drawing {
-        static let titleFontSize: CGFloat = 20
-        static let spacing: CGFloat = 10
+        static let titleFontSize: CGFloat = 16
+        static let spacing: CGFloat = 16
     }
     
     // MARK: - Body
@@ -27,6 +27,7 @@ struct SelectionField: View {
         } label: {
             HStack {
                 HStack(spacing: Drawing.spacing) {
+              
                     Text(title)
                         .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
                         .foregroundStyle(.secondary)
@@ -41,5 +42,18 @@ struct SelectionField: View {
             }
         }
         .buttonStyle(.plain)
+        .background(.appBackground)
+        .padding(8)
+        .clipShape(
+            RoundedRectangle(cornerRadius: 10)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(
+                    .white.opacity(0.08),
+                    lineWidth: 1
+                )
+        }
+        
     }
 }

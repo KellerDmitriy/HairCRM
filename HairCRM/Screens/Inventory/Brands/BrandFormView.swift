@@ -65,11 +65,10 @@ struct BrandFormView: View {
                 }
             }
             
-            TextField(
-                Resources.Text.name,
+            AppTextField(
+                title:Resources.Text.name,
                 text: $name
             )
-            .textFieldStyle(.roundedBorder)
             HStack {
                 Button {
                     onSave()

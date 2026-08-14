@@ -19,7 +19,7 @@ final class ClientModel {
     
     
     init(
-        id: UUID,
+        id: UUID = UUID(),
         name: String,
         surname: String,
         nikname: String? = nil,

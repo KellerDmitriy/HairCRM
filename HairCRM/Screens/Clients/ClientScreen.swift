@@ -31,6 +31,7 @@ struct ClientContent: View {
     @Query(sort: \ClientModel.name)
     private var clients: [ClientModel]
     
+    @State private var mode: ClientMode?
     
     @State private var showAddClient = false
     @State private var showSearchFlow = false
@@ -41,14 +42,14 @@ struct ClientContent: View {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
-    
     // MARK: - Body
     var body: some View {
-        VStack {
+        ScrollView {
             ForEach(clients) { client in
                 ClientForm(client: client)
             }
         }
+        .padding()
         .background(.appBackground)
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
@@ -65,6 +66,13 @@ struct ClientContent: View {
                 ToolBarButton(icon: .searchWhite) { showSearchFlow = true }
             }
         }
+        .sheet(isPresented: $showAddClient) {
+            AddClientSheet(
+                viewModel: viewModel,
+                mode: mode ?? .create
+            )
+        }
+        .presentationDetents([.medium])
     }
 }
 

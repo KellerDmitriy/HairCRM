@@ -58,16 +58,49 @@ final class InventoryViewModel: ObservableObject {
     }
     
     // MARK: Categories
-    func addCategory(name: String) {
-        let category = ProductCategory(name: name)
+    func addCategory(name: String) -> Bool {
+        let cleanName = name.cleaned
+
+        guard !cleanName.isEmpty else {
+            appError = .emptyName
+            return false
+        }
+
+        let category = ProductCategory(name: cleanName)
+
         do {
             try inventoryService.createCategory(category)
+            return true
+        } catch {
+            handleError(error)
+            return false
+        }
+    }
+    
+    func updateCategory(_ category: ProductCategory, name: String) {
+        let cleanName = name.cleaned
+
+        guard !cleanName.isEmpty else {
+            appError = .emptyName
+            return
+        }
+
+        category.name = cleanName
+
+        do {
+            try inventoryService.save()
         } catch {
             handleError(error)
         }
     }
     
-    func deleteCategory(_ category: ProductCategory) { try? inventoryService.deleteCategory(category) }
+    func deleteCategory(_ category: ProductCategory) {
+        do {
+            try inventoryService.deleteCategory(category)
+        } catch {
+            handleError(error)
+        }
+    }
     
     // MARK: Brand
     func addBrand(name: String,imageData: Data?) {

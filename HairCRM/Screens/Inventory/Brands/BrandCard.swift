@@ -22,12 +22,12 @@ struct BrandCard: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 60)
+                    .frame(height: 80)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
 
             } else {
                 Image(systemName: "shippingbox")
-                    .font(.system(size: 40))
+                    .font(.system(size: 70))
                     .foregroundStyle(.secondary)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
@@ -36,7 +36,7 @@ struct BrandCard: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 140)
+        .frame(height: 200)
         .background(.appBackground)
         .clipShape(RoundedRectangle(cornerRadius: 18))
     }

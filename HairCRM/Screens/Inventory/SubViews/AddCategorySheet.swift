@@ -19,33 +19,35 @@ struct AddCategorySheet: View {
     
     // MARK: - Body
     var body: some View {
-        
-        VStack(spacing: 24) {
-            
-            Text(Resources.Text.addNewCategory)
-                .airbnbCerealFont(AirbnbCerealFont.book, size: 18)
-            
-            TextField(
-                Resources.Text.nameCategory,
-                text: $name
-            )
-            .textFieldStyle(.roundedBorder)
-            
-            
-            Button {
-                viewModel.addCategory(
-                    name: name
-                )
-                dismiss()
+        NavigationStack {
+            VStack(spacing: 24) {
                 
-            } label: {
-                Text(Resources.Text.addNew)
-                    .frame(maxWidth: .infinity)
+                AppTextField(
+                    title:Resources.Text.nameCategory,
+                    text: $name
+                )
+                
+                
+                AppAddNewButton(title: Resources.Text.addNew, value: nil) {
+                    if
+                        viewModel.addCategory(
+                            name: name
+                        ) {
+                        dismiss()
+                    }
+                }
             }
-            .buttonStyle(.borderedProminent)
-            
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    AppCloseButton {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    ToolBarTitleView(title: Resources.Text.addNewCategory.localized)
+                }
+            }
+            .padding()
         }
-        .padding()
-        .presentationDetents([.medium])
     }
 }

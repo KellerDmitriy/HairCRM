@@ -43,19 +43,15 @@ struct AddProductSheet: View {
                 Form {
                     Section(Resources.Text.general) {
                         
-                        TextField(
-                            Resources.Text.nameProduct,
+                        AppTextField(
+                            title:Resources.Text.nameProduct,
                             text: $name
                         )
-                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                        
-                        
-                        TextField(
-                            Resources.Text.series,
+                        AppTextField(
+                            title: Resources.Text.series,
                             text: $series
                         )
-                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                        
+
                         Picker(
                             Resources.Text.brand,
                             selection: $selectedBrand
@@ -73,21 +69,17 @@ struct AddProductSheet: View {
                     }
                     
                     Section(Resources.Text.store.capitalized) {
-                        
-                        TextField(
-                            Resources.Text.cost,
-                            text: $purchasePrice
+                        AppTextField(
+                            title: Resources.Text.cost,
+                            text: $purchasePrice,
+                            keyboardType: .decimalPad
                         )
-                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                        .keyboardType(.decimalPad)
-                        
-                        TextField(
-                            Resources.Text.quantity,
-                            text: $quantity
+                        AppTextField(
+                            title:Resources.Text.quantity,
+                            text: $quantity,
+                            keyboardType: .decimalPad
                         )
-                        .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                        .keyboardType(.decimalPad)
-                        
+
                         Picker(
                             "",
                             selection: $unit

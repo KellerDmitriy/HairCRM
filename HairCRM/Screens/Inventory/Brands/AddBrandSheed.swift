@@ -20,23 +20,12 @@ struct AddBrandSheed: View {
     
     @State private var mode: BrandMode?
     
-    @State private var searchText = ""
     @State private var newItemName = ""
     @State private var imageData: Data?
     
-    private var filteredItems: [Brand] {
-        if searchText.isEmpty {
-            return brands
-        }
-        
-        return brands.filter {
-            $0.name.localizedCaseInsensitiveContains(searchText)
-        }
-    }
-    
     // MARK: - Body
     var body: some View {
-        NavigationStack {
+        NavigationStack{
             VStack(spacing: 16) {
                 listView()
                     .background(.appBackground)
@@ -46,18 +35,17 @@ struct AddBrandSheed: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
+                    AppCloseButton {
                         dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .foregroundStyle(.secondary)
                     }
                 }
             }
         }
+        
         .background(.appBackground)
         .alert(item: $viewModel.appError) { error in
-            Alert(
+            print(error.localizedDescription)
+            return Alert(
                 title: Text(Resources.Text.error),
                 message:  Text(error.localizedDescription),
                 dismissButton: .default(Text(Resources.Text.ok))
@@ -71,21 +59,30 @@ struct AddBrandSheed: View {
                 onSave: save
             )
             .presentationDetents([.medium])
+            .alert(item: $viewModel.appError) { error in
+                print(error.localizedDescription)
+                return Alert(
+                    title: Text(Resources.Text.error),
+                    message:  Text(error.localizedDescription),
+                    dismissButton: .default(Text(Resources.Text.ok))
+                )
+            }
         }
     }
     
     // MARK: - Save
     private func save() {
-        
         guard let mode else {
             return
         }
-        
         switch mode {
         case .create:
             viewModel.addBrand(name: newItemName, imageData: imageData)
         case .edit(let brand):
             viewModel.updateBrand(brand, name: newItemName, imageData: imageData)
+        }
+        if viewModel.appError == nil {
+            self.mode = nil
         }
     }
 }
@@ -95,15 +92,8 @@ extension AddBrandSheed {
     
     private func listView() -> some View {
         VStack {
-            CustomSearchBarView(
-                isSearchPresented: .constant(false),
-                searchText: $searchText,
-                scope: .brands
-            )
-            .padding()
-            
             List {
-                ForEach(filteredItems) { brand in
+                ForEach(brands) { brand in
                     
                     HStack(spacing: 12) {
                         // MARK: - Brand Image
@@ -167,12 +157,7 @@ extension AddBrandSheed {
                     }
                     .listRowBackground(Color.clear)
                 }
-            }
-            .listStyle(.plain)
-            .scrollContentBackground(.hidden)
-            .background(.appBackground)
                 // MARK: - Add Brand
-            Section {
                 Button {
                     newItemName = ""
                     imageData = nil
@@ -185,6 +170,9 @@ extension AddBrandSheed {
                     .foregroundStyle(.secondary)
                 }
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(.appBackground)
             .padding(.bottom, 16)
         }
         .background(.appBackground)
