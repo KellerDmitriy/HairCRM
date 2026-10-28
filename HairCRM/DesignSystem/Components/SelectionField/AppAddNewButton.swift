@@ -57,3 +57,7 @@ struct AppAddNewButton: View {
         
     }
 }
+
+#Preview {
+    AppAddNewButton(title: "Добавить", value: "") {}
+}

@@ -9,7 +9,12 @@ import SwiftUI
 
 struct HomeScreen: View {
     var body: some View {
-        Text("ExploreScreen")
+        ZStack(alignment: .top) {
+            Color.appBackground
+                .ignoresSafeArea(.all)
+            
+            Text("ExploreScreen")
+        }
     }
 }
 

@@ -9,7 +9,11 @@ import SwiftUI
 
 struct CalculatorScreen: View {
     var body: some View {
-        Text("CalculatorScreen")
+        ZStack(alignment: .top) {
+            Color.appBackground
+                .ignoresSafeArea(.all)
+            Text("CalculatorScreen")
+        }
     }
 }
 

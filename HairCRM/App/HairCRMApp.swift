@@ -17,7 +17,7 @@ struct HairCRMApp: App {
 
         WindowGroup {
             ContentView()
-                .colorScheme(.dark)
+           
 
         }
         .modelContainer(

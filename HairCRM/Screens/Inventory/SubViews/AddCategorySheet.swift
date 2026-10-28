@@ -16,38 +16,65 @@ struct AddCategorySheet: View {
     var viewModel: InventoryViewModel
     
     @State private var name = ""
+    @State private var showError = false
     
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
-                
-                AppTextField(
-                    title:Resources.Text.nameCategory,
-                    text: $name
-                )
-                
-                
-                AppAddNewButton(title: Resources.Text.addNew, value: nil) {
-                    if
-                        viewModel.addCategory(
-                            name: name
-                        ) {
-                        dismiss()
+            AppFormCard {
+                VStack(spacing: 24) {
+                    AppTextField(
+                        title:Resources.Text.nameCategory,
+                        text: $name
+                    )
+                    
+                    AppAddNewButton(
+                        title: Resources.Text.addNew,
+                        value: nil
+                    ) {
+                        addCategory()
                     }
                 }
             }
+            .padding(.top, 4)
+            .padding()
+            
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    AppCloseButton {
-                        dismiss()
-                    }
+                    AppCloseButton { dismiss() }
                 }
+                
                 ToolbarItem(placement: .principal) {
                     ToolBarTitleView(title: Resources.Text.addNewCategory.localized)
                 }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    AppAddButton { addCategory() }
+                    .disabled(name.isEmpty)
+                }
             }
-            .padding()
+            .alert(Resources.Text.error, isPresented: $showError) {
+                Button(Resources.Text.ok) {
+                    viewModel.appError = nil
+                }
+            } message: {
+                Text(viewModel.appError?.localizedDescription ?? "")
+            }
+        }
+    }
+    
+//MARK:- helpers methods
+    private func addCategory() {
+        viewModel.appError = nil
+        
+        if
+            viewModel.addCategory(
+                name: name
+            ) {
+            dismiss()
+        } else {
+            showError = viewModel.appError != nil
         }
     }
 }
+

@@ -70,7 +70,7 @@ struct InventoryContent: View {
         ScrollView(showsIndicators: false) {
         
                 categoriesSection()
-                
+
                 brandsSection()
         }
         .padding(20)
@@ -123,6 +123,7 @@ struct InventoryContent: View {
                     title: Resources.Text.categories,
                     isExpanded: $isCategoriesExpanded
                 )
+
                 
                 // MARK: - Categories
                 if isCategoriesExpanded {
@@ -136,7 +137,8 @@ struct InventoryContent: View {
                         } label: {
                             HStack {
                                 Text(category.name)
-                                    .airbnbCerealFont(.medium, size: 15)
+                                    .airbnbCerealFont(.medium, size: 16)
+                                    .foregroundStyle(.secondary)
                                 
                                 Spacer()
                                 
@@ -144,7 +146,7 @@ struct InventoryContent: View {
                                     .foregroundStyle(.secondary)
                             }
                             .padding()
-                            .background(.pink.opacity(0.5))
+                            .background(.appForegroundStyle.opacity(0.2))
                             .clipShape(
                                 RoundedRectangle(cornerRadius: 16)
                             )
@@ -157,7 +159,7 @@ struct InventoryContent: View {
                 .easeInOut(duration: 0.2),
                 value: isCategoriesExpanded
             )
-        }
+            }
     }
     
     // MARK: - Add BrandSection

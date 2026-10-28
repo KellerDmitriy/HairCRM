@@ -17,7 +17,7 @@ enum Resources {
         static let categories = "Категории"
         static let nameCategory = "Hазвание категории"
         static let addNew = "Добавить"
-        
+   
         static let addProduct = "Добавить товар"
         static let nameProduct = "Наименование"
         static let cancel = "Отмена"
@@ -36,7 +36,7 @@ enum Resources {
         static let searchCategory = "поиск категорий"
         static let searchClient = "поиск клиентов"
         static let searchService = "поиск клиентов"
-        
+        static let balance = "остаток"
         static let ok = "ok"
         static let delete = "Удалить"
         static let save = "Сохранить"

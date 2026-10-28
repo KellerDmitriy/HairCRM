@@ -35,9 +35,7 @@ struct AddBrandSheed: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    AppCloseButton {
-                        dismiss()
-                    }
+                    AppCloseButton { dismiss() }
                 }
             }
         }
@@ -58,6 +56,7 @@ struct AddBrandSheed: View {
                 imageData: $imageData,
                 onSave: save
             )
+            
             .presentationDetents([.medium])
             .alert(item: $viewModel.appError) { error in
                 print(error.localizedDescription)
@@ -157,18 +156,11 @@ extension AddBrandSheed {
                     }
                     .listRowBackground(Color.clear)
                 }
-                // MARK: - Add Brand
-                Button {
-                    newItemName = ""
-                    imageData = nil
-                    mode = .create
-                } label: {
-                    Label(
-                        Resources.Text.addNewBrand,
-                        systemImage: "plus"
-                    )
-                    .foregroundStyle(.secondary)
-                }
+                
+                // MARK: - Add Brand Button
+                addBrandButton()
+                    
+                    .listRowBackground(Color.clear)
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
@@ -176,6 +168,18 @@ extension AddBrandSheed {
             .padding(.bottom, 16)
         }
         .background(.appBackground)
+    }
+    
+    // MARK: - Add Brand Button
+    private func addBrandButton() -> some View {
+        AppAddNewButton(
+                title: Resources.Text.addNewBrand,
+                value: nil
+            ) {
+                newItemName = ""
+                imageData = nil
+                mode = .create
+            }
     }
 }
 
