@@ -32,6 +32,7 @@ struct AddProductSheet: View {
     // MARK: - Drawing Constants
     private struct Drawing {
         static let titleFontSize: CGFloat = 20
+        static let pickerFontSize: CGFloat = 16
     }
     
     // MARK: - Body
@@ -39,19 +40,22 @@ struct AddProductSheet: View {
         NavigationStack {
             Form {
                 addProductSection()
+                    .listRowBackground(Color.appForegroundStyle.opacity(0.2))
                 addStockSection()
-                
+                    .listRowBackground(Color.appForegroundStyle.opacity(0.2))
                 AppAddNewButton(
                     title: Resources.Text.addNew,
                     value: nil,
                     action: addProduct
                 )
+                .listRowBackground(Color.appForegroundStyle.opacity(0.2))
             }
-            
-            .navigationTitle(Resources.Text.addProduct)
-            .navigationBarTitleDisplayMode(.inline)
             .scrollContentBackground(.hidden)
+            
             .background(Color.appBackground)
+            
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(Resources.Text.addProduct)
             
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -103,12 +107,10 @@ struct AddProductSheet: View {
                     }
                 }
                 .pickerStyle(.menu)
-                .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
-                
+                .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.pickerFontSize)
+                .padding(.horizontal, 4)
                 .tint(.secondary)
                 .foregroundStyle(.secondary).opacity(0.6)
-                .padding(.horizontal)
-
             }
         }
     }

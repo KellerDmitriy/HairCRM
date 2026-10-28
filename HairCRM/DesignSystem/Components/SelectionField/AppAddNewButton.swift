@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct AppAddNewButton: View {
-
+    
     let title: String
     let value: String?
-
+    
     var action: () -> Void
     
     private struct Drawing {
@@ -27,7 +27,7 @@ struct AppAddNewButton: View {
         } label: {
             HStack {
                 HStack(spacing: Drawing.spacing) {
-              
+                    
                     Text(title)
                         .airbnbCerealFont(AirbnbCerealFont.medium, size: Drawing.titleFontSize)
                         .foregroundStyle(.secondary)
@@ -36,14 +36,14 @@ struct AppAddNewButton: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-
+                
                 Image(systemName: "plus")
                     .foregroundStyle(.secondary)
             }
         }
         .buttonStyle(.plain)
-        .background(.appBackground)
         .padding(8)
+        .background(.appBackground)
         .clipShape(
             RoundedRectangle(cornerRadius: 10)
         )
