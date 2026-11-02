@@ -36,7 +36,6 @@ struct BrandCard: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 200)
         .background(.appBackground)
         .clipShape(RoundedRectangle(cornerRadius: 18))
     }

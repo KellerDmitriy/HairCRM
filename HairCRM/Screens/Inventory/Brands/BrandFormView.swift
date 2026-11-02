@@ -79,5 +79,18 @@ struct BrandFormView: View {
                 }
             }
         }
+        .background(Color.appBackground)
     }
+}
+
+#Preview {
+    @Previewable @State var name = "Goldwell"
+    @Previewable @State var imageData: Data? = nil
+
+    BrandFormView(
+        mode: .create,
+        name: $name,
+        imageData: $imageData,
+        onSave: {}
+    )
 }

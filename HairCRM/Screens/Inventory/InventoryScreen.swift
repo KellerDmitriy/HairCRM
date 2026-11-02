@@ -45,20 +45,14 @@ struct InventoryContent: View {
     
     @State private var categoryMode: CategoryMode?
     @State private var categoryName = ""
-
+    
     @State private var isCategoriesExpanded = true
-    @State private var isBrandsExpanded = true
     
     @State private var showAddCategory = false
     @State private var showSuggestions = true
     @State private var showSearchFlow = false
     @State private var showBrandSelection = false
     
-    
-    private let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
     
     // MARK: - Init
     init(viewModel: InventoryViewModel) {
@@ -68,10 +62,8 @@ struct InventoryContent: View {
     // MARK: - Body
     var body: some View {
         ScrollView(showsIndicators: false) {
-        
-                categoriesSection()
-
-                brandsSection()
+            brandsSection()
+            categoriesSection()
         }
         .padding(20)
         .padding(.top)
@@ -103,6 +95,7 @@ struct InventoryContent: View {
         .sheet(isPresented: $showAddCategory) {
             AddCategorySheet(viewModel: viewModel)
                 .presentationDetents([.medium])
+                .presentationBackground(Color.appBackground)
         }
         
         .sheet(isPresented: $showBrandSelection) {
@@ -123,7 +116,7 @@ struct InventoryContent: View {
                     title: Resources.Text.categories,
                     isExpanded: $isCategoriesExpanded
                 )
-
+                
                 
                 // MARK: - Categories
                 if isCategoriesExpanded {
@@ -159,48 +152,49 @@ struct InventoryContent: View {
                 .easeInOut(duration: 0.2),
                 value: isCategoriesExpanded
             )
-            }
+        }
     }
     
     // MARK: - Add BrandSection
     private func addBrandSection() -> some View {
         AppAddNewButton(
-                title: Resources.Text.addNewBrand,
-                value: nil
-            ) {
-                showBrandSelection = true
-            }
+            title: Resources.Text.addNewBrand,
+            value: nil
+        ) {
+            showBrandSelection = true
+        }
     }
     
     // MARK: - BrandsSection
     private func brandsSection() -> some View {
         AppFormCard {
-            
             VStack(alignment: .leading, spacing: 8) {
-                AppSectionHeader(
-                    title: Resources.Text.brands,
-                    isExpanded: $isBrandsExpanded
-                )
+                HStack {
+                    Text(Resources.Text.brands)
+                        .airbnbCerealFont(.medium, size: 20)
+                        .foregroundStyle(.secondary)
+                        .opacity(0.6)
+                    Spacer()
+                    Text(Resources.Text.allBrands)
+                        .airbnbCerealFont(.medium, size: 12)
+                        .foregroundStyle(.secondary)
+                        .opacity(0.6)
+                        .onTapGesture {
+                            showBrandSelection = true
+                        }
+                }
                 
-                if isBrandsExpanded {
-                    LazyVGrid(
-                        columns: columns,
-                        spacing: 16
-                    ) {
-                        
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
                         ForEach(brands) { brand in
                             BrandCard(brand: brand)
                         }
                     }
-                    .animation(
-                        .easeInOut(duration: 0.2),
-                        value: isBrandsExpanded
-                    )
                 }
-              addBrandSection()
-                
+                addBrandSection()
             }
         }
+        .frame(height: 230)
     }
 }
 

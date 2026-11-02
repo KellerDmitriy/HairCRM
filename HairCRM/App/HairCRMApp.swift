@@ -30,7 +30,7 @@ struct HairCRMApp: App {
                 ClientModel.self,
                 Visit.self,
                 MaterialUsage.self,
-               
+                ProfileInfo.self
             ]
         )
     }

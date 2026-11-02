@@ -36,7 +36,7 @@ struct AddCategorySheet: View {
                     }
                 }
             }
-            .padding(.top, 4)
+            .padding(.top, 0)
             .padding()
             
             .toolbar {

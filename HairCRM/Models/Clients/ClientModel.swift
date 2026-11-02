@@ -15,6 +15,8 @@ final class ClientModel {
     var surname: String
     var nikname: String?
     var phone: String
+    var dateOfBirth: Date?
+    var dateOfVisit: Date?
     var notes: String?
     
     
@@ -24,6 +26,8 @@ final class ClientModel {
         surname: String,
         nikname: String? = nil,
         phone: String,
+        dateOfBirth: Date? = nil,
+        dateOfVisit: Date? = nil,
         notes: String? = nil
     ) {
         self.id = id
