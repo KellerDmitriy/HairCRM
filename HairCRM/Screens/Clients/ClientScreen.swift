@@ -45,6 +45,12 @@ struct ClientContent: View {
     // MARK: - Body
     var body: some View {
         ScrollView {
+            if clients.isEmpty {
+                AppFormCard {
+                    Text(Resources.Text.addNewClient)
+                }
+                    
+            }
             ForEach(clients) { client in
                 ClientForm(client: client)
             }

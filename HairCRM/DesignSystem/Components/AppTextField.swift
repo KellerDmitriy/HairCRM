@@ -40,11 +40,12 @@ struct AppTextField: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(.appBackground)
         )
+
         .overlay {
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(
-                    .white.opacity(0.08),
-                    lineWidth: 1
+                    .appForegroundStyle.opacity(0.2),
+                    lineWidth: 1.5
                 )
         }
     }

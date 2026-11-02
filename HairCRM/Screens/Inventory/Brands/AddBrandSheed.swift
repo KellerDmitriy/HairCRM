@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import SwiftData
 
 struct AddBrandSheed: View {
     
@@ -25,7 +26,7 @@ struct AddBrandSheed: View {
     
     // MARK: - Body
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             VStack(spacing: 16) {
                 listView()
                     .background(.appBackground)
@@ -35,9 +36,7 @@ struct AddBrandSheed: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    AppCloseButton {
-                        dismiss()
-                    }
+                    AppCloseButton { dismiss() }
                 }
             }
         }
@@ -58,7 +57,11 @@ struct AddBrandSheed: View {
                 imageData: $imageData,
                 onSave: save
             )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.appBackground.ignoresSafeArea())
             .presentationDetents([.medium])
+            .presentationBackground(Color.appBackground)
+            
             .alert(item: $viewModel.appError) { error in
                 print(error.localizedDescription)
                 return Alert(
@@ -157,18 +160,11 @@ extension AddBrandSheed {
                     }
                     .listRowBackground(Color.clear)
                 }
-                // MARK: - Add Brand
-                Button {
-                    newItemName = ""
-                    imageData = nil
-                    mode = .create
-                } label: {
-                    Label(
-                        Resources.Text.addNewBrand,
-                        systemImage: "plus"
-                    )
-                    .foregroundStyle(.secondary)
-                }
+                
+                // MARK: - Add Brand Button
+                addBrandButton()
+                    
+                    .listRowBackground(Color.clear)
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
@@ -177,6 +173,52 @@ extension AddBrandSheed {
         }
         .background(.appBackground)
     }
+    
+    // MARK: - Add Brand Button
+    private func addBrandButton() -> some View {
+        AppAddNewButton(
+                title: Resources.Text.addNewBrand,
+                value: nil
+            ) {
+                newItemName = ""
+                imageData = nil
+                mode = .create
+            }
+    }
 }
 
 
+#Preview {
+    let container = try! ModelContainer(
+        for: Brand.self,
+        Product.self,
+        ProductCategory.self,
+        ProductGroup.self,
+        configurations: ModelConfiguration(
+            isStoredInMemoryOnly: true
+        )
+    )
+
+    let context = container.mainContext
+
+    let brands: [Brand] = [
+        Brand(name: "Goldwell"),
+        Brand(name: "Wella"),
+        Brand(name: "Davines")
+    ]
+
+    for brand in brands {
+        context.insert(brand)
+    }
+
+    let appContainer = AppContainer(context: context)
+
+    return AddBrandSheed(
+        viewModel: InventoryViewModel(
+            inventoryService: appContainer.inventoryService
+        ),
+        brands: brands
+    )
+    .modelContainer(container)
+    .environment(\.appContainer, appContainer)
+}

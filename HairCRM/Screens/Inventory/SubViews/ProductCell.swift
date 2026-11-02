@@ -13,14 +13,12 @@ struct ProductCell: View {
     
     // MARK: - Body
     var body: some View {
-        ZStack {
+        AppFormCard {
             HStack(spacing: 12) {
                 
-                productImage
-                
+                VStack(alignment: .leading, spacing: 4) {
                 Text(product.name)
                     .airbnbCerealFont(AirbnbCerealFont.book, size: 20)
-                VStack(alignment: .leading, spacing: 4) {
                     
                     if let series = product.series {
                         Text(series)
@@ -36,8 +34,10 @@ struct ProductCell: View {
                 }
                 
                 Spacer()
-                
-                quantityView
+                VStack(alignment: .center, spacing: 4) {
+                    quantityView
+                    productImage
+                }
             }
         }
         .padding(.vertical, 8)
@@ -60,16 +60,14 @@ struct ProductCell: View {
     // MARK: - Quantity
     private var quantityView: some View {
         
-        VStack(alignment: .trailing, spacing: 4) {
+        VStack(alignment: .center, spacing: 2) {
+            Text(Resources.Text.balance)
+                .font(.caption)
+                .foregroundStyle(.secondary)
             Text(
                 "\(product.quantity.formatted()) \(product.unit.rawValue)"
             )
             .font(.headline)
-            
-            
-            Text("остаток")
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
     }
 }

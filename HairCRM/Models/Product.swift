@@ -182,4 +182,22 @@ enum ProductUnit: String, Codable, CaseIterable {
     case milliliter = "мл"
 }
 
+// MARK: - ProfileInfo
+@Model
+final class ProfileInfo {
 
+    var id: UUID
+    var name: String
+
+    @Attribute(.externalStorage)
+    var avatarImage: Data?
+
+    init(
+        name: String,
+        avatarImage: Data? = nil
+    ) {
+        self.id = UUID()
+        self.name = name
+        self.avatarImage = avatarImage
+    }
+}

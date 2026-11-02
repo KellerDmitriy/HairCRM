@@ -17,7 +17,7 @@ enum Resources {
         static let categories = "Категории"
         static let nameCategory = "Hазвание категории"
         static let addNew = "Добавить"
-        
+   
         static let addProduct = "Добавить товар"
         static let nameProduct = "Наименование"
         static let cancel = "Отмена"
@@ -25,6 +25,7 @@ enum Resources {
         static let series = "Серия"
         static let brand = "Бренд"
         static let brands = "Бренды"
+        static let allBrands = "все бренды"
         static let addNewBrand = "Добавить новый бренд"
         static let notSelected = "Не выбрано"
         static let inventory = "Остаток"
@@ -36,13 +37,17 @@ enum Resources {
         static let searchCategory = "поиск категорий"
         static let searchClient = "поиск клиентов"
         static let searchService = "поиск клиентов"
-        
+        static let balance = "остаток"
         static let ok = "ok"
         static let delete = "Удалить"
         static let save = "Сохранить"
         static let edit = "Редактировать"
         static let error = "Ошибка"
         
+        static let fio = "ФИО"
+        static let phone = "тел."
+        static let dateOfBirth = "дата рождения"
+        static let dateOfVisit = "дата посещения"
         static let client = "Клиенты"
         static let addNewClient = "Добавить клиента"
         static let editClient = "Редактировать данные клиента"
@@ -50,5 +55,10 @@ enum Resources {
         static let clientSurname = "Фамилия"
         static let clientPhone = "Телефон"
         static let clientNote = "Заметки"
+        static let noDate = "нет даты"
+        
+        static let editProfile = "редактировать профиль"
+        static let createProfile = "создать профиль"
+        static let userName = "Имя пользователя"
     }
 }

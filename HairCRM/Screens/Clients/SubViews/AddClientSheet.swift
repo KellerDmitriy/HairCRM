@@ -50,10 +50,16 @@ struct AddClientSheet: View {
             )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                
+                ToolbarItem(placement: .topBarLeading) {
                     AppCloseButton {
                         dismiss()
                     }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    AppAddButton { saveNewClient() }
+                    .disabled(name.isEmpty)
                 }
             }
         }
@@ -61,7 +67,7 @@ struct AddClientSheet: View {
     }
     
     // MARK: - helpers
-    private func save() {
+    private func saveNewClient() {
         let client = ClientModel(
             name: name,
             surname: surname,
