@@ -35,4 +35,20 @@ final class ClientViewModel: ObservableObject {
         }
     }
     
+    func deleteClient(_ client: ClientModel) {
+        
+        do {
+            try clientService.deleteClient(client)
+        } catch {
+            handleError(error)
+        }
+    }
+    
+    func updateClient(_ client: ClientModel) {
+        do {
+            try clientService.updateClient(client)
+        } catch {
+            handleError(error)
+        }
+    }
 }

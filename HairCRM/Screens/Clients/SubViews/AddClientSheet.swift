@@ -15,9 +15,12 @@ struct AddClientSheet: View {
     var viewModel: ClientViewModel
     
     let mode: ClientMode
+    
     @State private var name = ""
     @State private var surname = ""
     @State private var phone = ""
+    @State private var dateOfBirth = ""
+    @State private var dateOfLastVisit = ""
     @State private var note = ""
     
     @FocusState
@@ -27,6 +30,7 @@ struct AddClientSheet: View {
         case name
         case surname
         case phone
+        case dateOfBirth
         case note
     }
         
@@ -58,8 +62,12 @@ struct AddClientSheet: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    AppAddButton { saveNewClient() }
+                    AppAddButton {
+                        saveNewClient()
+                        dismiss()
+                    }
                     .disabled(name.isEmpty)
+                   
                 }
             }
         }
@@ -107,7 +115,17 @@ struct AddClientSheet: View {
                     autocorrectionDisabled: true
                 )
                 .focused($focusedField, equals: .phone)
-
+                
+                AppTextField(
+                    title: Resources.Text.dateOfBirth,
+                    text: $dateOfBirth,
+                    keyboardType: .phonePad,
+                    textContentType: .telephoneNumber,
+                    autocapitalization: .never,
+                    autocorrectionDisabled: true
+                )
+                .focused($focusedField, equals: .dateOfBirth)
+                
                 AppTextField(
                     title: Resources.Text.clientNote,
                     text: $note,

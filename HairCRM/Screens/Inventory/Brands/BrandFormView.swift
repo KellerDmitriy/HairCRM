@@ -79,6 +79,7 @@ struct BrandFormView: View {
                 }
             }
         }
+        .padding(.horizontal)
         .background(Color.appBackground)
     }
 }

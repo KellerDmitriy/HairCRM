@@ -76,6 +76,7 @@ struct ProfileEditSheed: View {
                 }
             }
         }
+        .padding()
         .background(Color.appBackground)
     }
 }

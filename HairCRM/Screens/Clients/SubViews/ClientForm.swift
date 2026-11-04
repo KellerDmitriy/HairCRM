@@ -22,14 +22,13 @@ struct ClientForm: View {
                     
                     Text("\(Resources.Text.dateOfBirth): \(client.dateOfBirth?.formatted() ?? Resources.Text.noDate)")
                     
-                    Text("\(Resources.Text.dateOfVisit): \(client.dateOfVisit?.formatted() ?? Resources.Text.noDate)")
                 }
                 Spacer()
             }
             .airbnbCerealFont(.medium, size: 20)
             .foregroundStyle(.secondary).opacity(0.8)
         }
-        .frame(width: .infinity, height: 300)
+       
     }
 }
 

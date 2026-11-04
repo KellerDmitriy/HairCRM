@@ -50,6 +50,10 @@ struct ProfileScreen: View {
                     imageData: $imageData,
                     onSave: { saveProfile(currentMode) }
                 )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.appBackground.ignoresSafeArea())
+                .presentationDetents([.medium])
+                .presentationBackground(Color.appBackground)
             }
         }
     }

@@ -163,7 +163,6 @@ extension AddBrandSheed {
                 
                 // MARK: - Add Brand Button
                 addBrandButton()
-                    
                     .listRowBackground(Color.clear)
             }
             .listStyle(.plain)
